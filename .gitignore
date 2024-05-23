@@ -1,0 +1,9 @@
+# Keep IntelliJ files out of github to reduce potential conflicts when others import.
+
+.idea
+core.iml
+_site
+.jekyll-cache
+.DS_Store
+.history
+morea/Session11/~$Session11_SWA_Results.xlsx

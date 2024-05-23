@@ -1,0 +1,117 @@
+---
+layout: default
+---
+
+<!-- Load visualization stuff -->
+<script type="text/javascript" src="../js/vis.js"></script>
+<script type="text/javascript" src="../js/underscore.js"></script>
+<script type="text/javascript" src="../js/palette.js"></script>
+<link href="../css/vis.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    #mynetwork {
+      width: 100%;
+      height: 800px;
+      border: 1px solid lightgray;
+    }
+</style>
+
+<!-- Load course info -->
+<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS111/module-info.js"></script>
+<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS141/module-info.js"></script>
+<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS211/module-info.js"></script>
+<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS215/module-info.js"></script>
+<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS241/module-info.js"></script>
+<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS311/module-info.js"></script>
+<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS312/module-info.js"></script>
+<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS314/module-info.js"></script>
+<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS321/module-info.js"></script>
+
+
+
+{% if page.topdiv == 'container' %}
+<div class="container">
+  {{ content }}
+</div>
+{% else %}
+  {{ content }}
+{% endif %}
+
+<div id="mynetwork"></div>
+
+<script type="text/javascript">
+  var numCourses = 9; // update this each time you add a new course.
+  var courseColors = palette('tol', numCourses);
+  var moduleNodes = [];
+  var moduleEdges = [];
+
+  var processCourse = function(course, nodes, edges, color) {
+    var numModules = course.modules.length;
+    // Define a node for each module, and chain the modules of a course together.
+    // Use a for loop so we can chain all but the last module to the next one.
+    for (i = 0; i < numModules; i++) {
+      var node = {};
+      var module = course.modules[i];
+      node.id = module.moduleUrl;
+      node.label = module.course + ": " + module.title;
+      node.color = '#' + color;
+      node.shape = 'box';
+      node.title = module.description;
+      nodes.push(node);
+      if (i < (numModules - 1)) {
+        var edge = {};
+        edge.from = module.moduleUrl;
+        edge.to = course.modules[i + 1].moduleUrl;
+        edges.push(edge);
+      }
+    }
+    // Define an edge for each prerequisite.
+    _.each(course.prerequisites,
+        function (prereq) {
+          var edge = {};
+          edge.from = prereq.moduleUrl;
+          edge.to = prereq.prerequisiteUrl;
+          edges.push(edge);
+        });
+  }
+
+  processCourse(ics111, moduleNodes, moduleEdges, courseColors[0]);
+  processCourse(ics141, moduleNodes, moduleEdges, courseColors[1]);
+  processCourse(ics211, moduleNodes, moduleEdges, courseColors[2]);
+  processCourse(ics215, moduleNodes, moduleEdges, courseColors[3]);
+  processCourse(ics241, moduleNodes, moduleEdges, courseColors[4]);
+  processCourse(ics311, moduleNodes, moduleEdges, courseColors[5]);
+  processCourse(ics312, moduleNodes, moduleEdges, courseColors[6]);
+  processCourse(ics314, moduleNodes, moduleEdges, courseColors[7]);
+  processCourse(ics321, moduleNodes, moduleEdges, courseColors[8]);
+
+
+  // create a network
+  var container = document.getElementById('mynetwork');
+
+  // provide the data in the vis format
+  var data = {
+    nodes: moduleNodes,
+    edges: moduleEdges
+  };
+
+  var options = {
+    // Layout is deterministic.
+    layout: { randomSeed: 2},
+    nodes: {
+      font: {
+        color: 'white'
+      }
+    },
+    physics: {stabilization: true}
+  };
+
+  // initialize your network!
+  var network = new vis.Network(container, data, options);
+
+  network.on("doubleClick", function (params) {
+    if (params['nodes'].length > 0) {
+      window.open(params['nodes'][0]);
+    }
+  });
+
+</script>
