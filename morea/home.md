@@ -4,35 +4,27 @@ morea_id: home
 morea_type: home
 ---
 
-# Courses.ICS
+# DESCARTES NRT Courses Site
 
-Welcome to Courses.ICS, a service of the [Department of Information and Computer Sciences](http://www.ics.hawaii.edu) at the [University of Hawaii at Manoa](http://manoa.hawaii.edu).
+Welcome to DESCARTES NRT Courses Site, a service of the [DESCARTES NRT Courses Site](https://descartes.manoa.hawaii.edu/) at the [University of Hawaii at Manoa](http://manoa.hawaii.edu).
 
 ### Purpose
 
 This site supports:
+   * NRT trainees interdisciplinary data science and AI course modules.
+   * Faculty who wish to provide resources or modules to utilize in their courses.
+   * Opensource resources for curriculum material for NRT programs and the community.
 
-  * Students who wish to refresh their understanding of material they learned in previous courses.
-  
-  * Faculty who wish to provide links to material from prerequisite courses for which they will assume student familiarity.
-  
-  * Students and faculty who wish to determine how the ICS curriculum aligns with community standards, such as the ACM's [Computer Science Curricula 2013](https://www.acm.org/education/CS2013-final-report.pdf). 
-  
-  * Students and faculty who come across new online resources for curriculum material and wish to share it with others. 
 
 
 ### Contents
 
 This site contains:
 
-  * [Review Sites]({{ site.baseurl }}/review-sites) provides links to "archival reference versions" of selected ICS courses.  Each review site provides access to self-study materials selected from recent versions of the course. Currently, only a subset of ICS courses have a corresponding review site, but our ultimate goal is to cover all courses in the ICS curriculum.
+  * [Review Sites]({{ site.baseurl }}/review-sites) provides links to selected UHM courses participating in the DESCARTES program.
 
-  * [Syllabuses]({{ site.baseurl }}/syllabuses) provides links to syllabuses for undergraduate courses.
+  * [Course Network]({{ site.baseurl }}/course-network) provides a high-level graphical representation of the structure of the DESCARTES curriculum.
   
-  * [Course Network]({{ site.baseurl }}/course-network) provides a high-level graphical representation of the structure of the ICS curriculum. 
-  
-  * [Module Browser]({{ site.baseurl }}/module-browser) provides a detailed representation of ICS courses at the module-level and dependencies between courses at the module level.  Only ICS courses with Review Sites are included in this representation. 
+  * [Module Browser]({{ site.baseurl }}/module-browser) provides a detailed representation of DESCARTES courses at the module-level and dependencies between courses at the module level.
     
-  * [Suggestion Box]({{ site.baseurl }}/suggestion-box) provides a way for you to participate in the development of this site.  Want to suggest materials for inclusion in a review site? Flag an error in a module?  Use the Suggestion Box to make your improvements known to the site administrators. 
-
-  
+  * [Suggestion Box]({{ site.baseurl }}/suggestion-box) provides a way for you to participate in the development of this site.  Want to suggest materials for inclusion in a review site? Flag an error in a module?  Use the Suggestion Box to make your improvements known to the site administrators.

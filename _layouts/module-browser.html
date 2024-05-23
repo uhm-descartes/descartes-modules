@@ -16,15 +16,9 @@ layout: default
 </style>
 
 <!-- Load course info -->
-<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS111/module-info.js"></script>
-<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS141/module-info.js"></script>
-<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS211/module-info.js"></script>
-<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS215/module-info.js"></script>
-<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS241/module-info.js"></script>
-<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS311/module-info.js"></script>
-<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS312/module-info.js"></script>
-<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS314/module-info.js"></script>
-<script type="text/javascript" src="//courses.ics.hawaii.edu/ReviewICS321/module-info.js"></script>
+<script type="text/javascript" src="//dport96.github.io/ITM683/module-info.js"></script>
+<script type="text/javascript" src="//dport96.github.io/BUS619/module-info.js"></script>
+<script type="text/javascript" src="//descartes.manoa.hawaii.edu/MGT650/module-info.js"></script>
 
 
 
@@ -39,7 +33,7 @@ layout: default
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
-  var numCourses = 9; // update this each time you add a new course.
+  var numCourses = 3; // update this each time you add a new course.
   var courseColors = palette('tol', numCourses);
   var moduleNodes = [];
   var moduleEdges = [];
@@ -74,15 +68,9 @@ layout: default
         });
   }
 
-  processCourse(ics111, moduleNodes, moduleEdges, courseColors[0]);
-  processCourse(ics141, moduleNodes, moduleEdges, courseColors[1]);
-  processCourse(ics211, moduleNodes, moduleEdges, courseColors[2]);
-  processCourse(ics215, moduleNodes, moduleEdges, courseColors[3]);
-  processCourse(ics241, moduleNodes, moduleEdges, courseColors[4]);
-  processCourse(ics311, moduleNodes, moduleEdges, courseColors[5]);
-  processCourse(ics312, moduleNodes, moduleEdges, courseColors[6]);
-  processCourse(ics314, moduleNodes, moduleEdges, courseColors[7]);
-  processCourse(ics321, moduleNodes, moduleEdges, courseColors[8]);
+  processCourse(itm683, moduleNodes, moduleEdges, courseColors[0]);
+  processCourse(bus619, moduleNodes, moduleEdges, courseColors[1]);
+  processCourse(mgt650, moduleNodes, moduleEdges, courseColors[2]);
 
 
   // create a network
