@@ -19,6 +19,7 @@ layout: default
 <script type="text/javascript" src="//dport96.github.io/ITM683/module-info.js"></script>
 <script type="text/javascript" src="//dport96.github.io/BUS619/module-info.js"></script>
 <script type="text/javascript" src="//descartes.manoa.hawaii.edu/MGT650/module-info.js"></script>
+<script  type="text/javascript" src="//descartes.manoa.hawaii.edu/ee445/module-info.js"></script>
 
 
 
@@ -33,7 +34,7 @@ layout: default
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
-  var numCourses = 3; // update this each time you add a new course.
+  var numCourses = 4; // update this each time you add a new course.
   var courseColors = palette('tol', numCourses);
   var moduleNodes = [];
   var moduleEdges = [];
@@ -71,6 +72,7 @@ layout: default
   processCourse(itm683, moduleNodes, moduleEdges, courseColors[0]);
   processCourse(bus619, moduleNodes, moduleEdges, courseColors[1]);
   processCourse(mgt650, moduleNodes, moduleEdges, courseColors[2]);
+  processCourse(ee445, moduleNodes, moduleEdges, courseColors[3]);
 
 
   // create a network

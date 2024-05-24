@@ -6,7 +6,7 @@ topdiv: container
 
 # Module Browser
 
-The following visualization shows all of the modules in the [Review Sites]({{ site.baseurl }}/review-sites).
+The following visualization shows all of the modules in the [Course Sites]({{ site.baseurl }}/course-sites).
 
 Each module is linked to the preceding and next module in that course. Modules are also linked to prerequisite modules from other courses. 
 

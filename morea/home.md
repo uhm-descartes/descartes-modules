@@ -21,7 +21,7 @@ This site supports:
 
 This site contains:
 
-  * [Review Sites]({{ site.baseurl }}/review-sites) provides links to selected UHM courses participating in the DESCARTES program.
+  * [Course Sites]({{ site.baseurl }}/course-sites) provides links to selected UHM courses participating in the DESCARTES program.
 
   * [Course Network]({{ site.baseurl }}/course-network) provides a high-level graphical representation of the structure of the DESCARTES curriculum.
   
