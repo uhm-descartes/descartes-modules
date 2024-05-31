@@ -1,3 +1,9 @@
+# descrartes courses
+descartes_courses:
+  - name: BUS 619
+    url: https://morea-framework.github.io/bus619
+
+
 # MOREA CONFIGURATION FILE
 # See https://morea-framework.github.io/docs/instructors/config-yml
 

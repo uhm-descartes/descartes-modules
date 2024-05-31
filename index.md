@@ -10,3 +10,6 @@ topdiv: container
   No home page content supplied.
 {% endif %}
 
+<script>
+console.log(`{{ site.descartes_courses }}`);
+</script>
