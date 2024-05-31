@@ -34,4 +34,6 @@ Click on the tiles below to go to the corresponding Review Site.
 
 {% include coursesite.html num="EE 645" name="AI/machine learning for research" description="Machine learning, and a foundational course for graduate students who would like to use AI/machine learning in their research" url="https://descartes.manoa.hawaii.edu/ee645/" %}
 
+{% include coursesite.html num="EE 645" name="wireless communication systems" description="Basics of wireless communication systems, exciting new topics such as the integration of artificial intelligence (AI) and wireless communications, and emerging paradigms of communication systems such as quantum communication" url="https://descartes.manoa.hawaii.edu/ee643spring2024/" %}
+
 </div>
