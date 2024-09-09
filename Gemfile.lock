@@ -12,7 +12,7 @@ GEM
     ethon (0.16.0)
       ffi (>= 1.15.0)
     eventmachine (1.2.7)
-    faraday (2.7.12)
+    faraday (2.8.1)
       base64
       faraday-net_http (>= 2.0, < 3.1)
       ruby2_keywords (>= 0.0.4)
@@ -69,7 +69,7 @@ GEM
     parallel (1.26.3)
     pathutil (0.16.2)
       forwardable-extended (~> 2.6)
-    public_suffix (5.0.1)
+    public_suffix (5.1.1)
     racc (1.8.1)
     rainbow (3.1.1)
     rb-fsevent (0.11.2)
