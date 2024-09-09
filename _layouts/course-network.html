@@ -23,17 +23,6 @@ layout: default
 
 <script type="text/javascript">
 
-  var courses = [
-    {id: 'bus619', level: 1, label: 'BUS 619: Business Statistics and Analytics'},
-    {id: 'itm683', level: 2, label: 'ITM 683: Business Intelligence and Analytics'},
-    {id: 'mgt650', level: 1, label: 'MGT 650: Leadership and Organizations'}
-  ]
-
-  var courselinks = [
-    {from: 'bus619', to: 'itm683'}
-  ]
-
-
   var addModuleProperties = function(modules) {
     _.each(modules,
         function(module) {
@@ -66,9 +55,9 @@ layout: default
 
 
   // Add IDs and other standard properties to all modules.
-  setModuleProperty(courses, 'shape', 'box');
+  setModuleProperty(courses2, 'shape', 'box');
 
-  var coursesDataSet = new vis.DataSet(courses);
+  var coursesDataSet = new vis.DataSet(courses2);
   var courseLinksDataSet = new vis.DataSet(courselinks);
 
   // create a network

@@ -18,6 +18,7 @@ Hovering over a node will show a tooltip with the module description.
 
 Double-clicking a node is intended take you to the corresponding module page.  *Note:* sometimes you might need to single-click, then double-click, for this function to work.
 
+{% include courses_info.html %}
 
 
 

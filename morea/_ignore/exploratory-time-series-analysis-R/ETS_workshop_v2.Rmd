@@ -1,0 +1,206 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This loads all the sheets in the CC data file into a list
+```{r}
+# function to load all Excel sheets into a list
+read_all_sheets <- function(filename, tibble = FALSE) {
+    # I prefer straight data.frames
+    # but if you like tidyverse tibbles (the default with read_excel)
+    # then just pass tibble = TRUE
+    sheets <- readxl::excel_sheets(filename)
+    x <- lapply(sheets, function(X) readxl::read_excel(filename, sheet = X))
+    if(!tibble) x <- lapply(x, as.data.frame)
+    names(x) <- sheets
+    x
+}
+
+# load CC data into list
+CC_data <- read_all_sheets("HIDSI_TS_workshop_data.xlsx")
+View(CC_data)
+```
+
+Is the climate changing as indicated by unexpected global temperature variation?
+
+Let's look at global temp over time:
+```{r}
+View(CC_data$`02_Global Temperature Index`)
+# prepare global temp as a time series
+global_temp.ts <- ts(CC_data$`02_Global Temperature Index`$`temperature index`, start=c(1880,1), frequency = 12)
+plot(global_temp.ts)
+
+# using ggplot with LOESS smoother
+library(ggplot2)
+df <- data.frame(Y=as.matrix(global_temp.ts), date=time(global_temp.ts))
+ggplot(df, aes(x = date, y = Y)) +
+  geom_line() +
+  geom_smooth(se = FALSE)
+```
+Looks like global temp is increasing starting around 1930. Let's look at annual global temps to get a less noisy view:
+```{r}
+# using xts to convert monthly to annual
+library(xts)
+# Convert monthly data to annual data
+annual_data <- to.period(as.xts(global_temp.ts), period = "years", OHLC = FALSE)
+df <- data.frame(Y=annual_data, date=time(annual_data))
+ggplot(df, aes(x = date, y = Y)) +
+  geom_line() +
+  geom_smooth(se = FALSE)
+
+# smooth using 11-year averages
+library(TTR)
+plot(annual_data)
+lines(SMA(annual_data, n = 11), col = "red", lwd = 2)
+```
+If the climate is not changing, then the ts should be stationary. Let's see if if annual temps is non-stationary (obvious it is not though due to the clear increasing trend).
+
+Two tests for stationary
+
+Augmented Dickey-Fuller (ADF) test hypothesis:
+
+• H0: A unit root is present in the time series sample (Non-stationary)
+
+• Ha: There is no root unit present in the time series sample (Stationary)
+
+
+Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test hypothesis:
+
+• H0: The data is stationary around a constant (Stationary)
+
+• Ha: A unit root is present in the time series sample (Non-stationary)
+
+```{r}
+library(tseries)
+adf.test(annual_data)
+kpss.test(annual_data)
+```
+Were global temps ever stationary? Let's explore pre-1940
+```{r}
+adf.test(annual_data[time(annual_data) < "Dec 1940"])
+kpss.test(annual_data[time(annual_data) < "Dec 1940"])
+```
+
+ Nope. Let's try 1930
+```{r}
+adf.test(annual_data[time(annual_data) < "Dec 1930"])
+kpss.test(annual_data[time(annual_data) < "Dec 1930"])
+```
+Better, let's try 1920
+```{r}
+adf.test(annual_data[time(annual_data) < "Dec 1920"])
+kpss.test(annual_data[time(annual_data) < "Dec 1920"])
+```
+Got it! We could automate this to find a more specific year at which the global temps became non-stationary. But the question here is what happend in the 1920's to cause non-stationarty? Hint: huge increase in fossile fuel use for industry and transportation.
+
+Let's model look at the components of global temp to see more clearly what is non-stationary:
+
+```{r}
+# addiative model
+global_temp_decomp <- decompose(global_temp.ts, type = "a")
+plot(global_temp_decomp)
+```
+A clear increasing trend component starting 1960.
+
+The seasonal component is hard to view. Let's look at a small window at the start and compare it to a small window at the end.
+
+```{r}
+plot(global_temp_decomp$seasonal[1:60], type="l")
+plot(global_temp_decomp$seasonal[1600:1660], type="l")
+```
+Looks similar, but what is the overall seasonality?
+
+```{r}
+plot(global_temp_decomp$figure, type="b")
+```
+As expected, temperatures fluctuate seasonally. Since this is global temperature averages, the monthly increases and decreases do not exactly correspond to the seasons (when it's winter in one hemisphere, it's summer in the other). What we care about is if the seasonality is constant or has it been changing over time (e.g. more variable)?
+
+```{r}
+global_temp_decomp <- decompose(global_temp.ts, type = "m")
+plot(global_temp_decomp)
+```
+
+What's causing the increasing trend? Maybe solar irradiance (more intense solar radiation)
+
+
+```{r}
+View(CC_data$`Solar Activity`)
+solar_activity.ts <- ts(CC_data$`Solar Activity`$`Total solar irradiance [w/m2]`, start=c(1980,2), frequency = 12)
+plot(solar_activity.ts)
+
+solar_activity_decomp <- decompose(solar_activity.ts, type = "a")
+plot(solar_activity_decomp)
+```
+
+Does the trend comp for solar activity explain the trend comp for global temp?
+
+```{r}
+# match time range for global temp and solar activity
+xts(solar_activity.ts, order.by=as.Date(time(solar_activity.ts)), frequency = 12) -> solar_irr.xts
+xts(global_temp.ts, order.by=as.Date(time(global_temp.ts)), frequency = 12) -> global_temp.xts
+ccf(as.numeric(solar_irr.xts['1981::2022']),as.numeric(global_temp.xts['1981::2022']))
+```
+Significant negative correlation! Solar activity does not explain increasing global temp.
+
+Does CO2 concentration correlate?
+
+```{r}
+View(CC_data$`01_CO2 Concentration`)
+CO2.ts <- ts(CC_data$`01_CO2 Concentration`$`Monthly Data (PPM)`, start=c(1958,3), frequency = 12)
+plot(CO2.ts)
+#######################
+CO2_decomp <- decompose(CO2.ts, type = "a")
+plot(CO2_decomp)
+
+# show correlation with global temp trend
+# match time range for global temp and CO2
+subset(CC_data$`01_CO2 Concentration`, year >= 1959 & year <= 2022) -> co2
+
+xts(CO2.ts, order.by=as.Date(time(CO2.ts)), frequency = 12) -> CO2.xts
+# xts(global_temp.ts, order.by=as.Date(time(global_temp.ts)), frequency = 12) -> global_temp.xts
+ccf(as.numeric(CO2.xts['1959::2022']),as.numeric(global_temp.xts['1959::2022']))
+cor(as.numeric(CO2.xts['1959::2022']),as.numeric(global_temp.xts['1959::2022']))^2 # R2
+```
+Strongly positively correlated. CO2 concentration explains about 83% of the variability in global temp.
+
+What explains rise in CO2 concentration?
+```{r}
+View(CC_data$`CO2 Emissions`)
+CO2_emission.ts <- ts(CC_data$`CO2 Emissions`$Tons, start=1750, frequency = 1)
+plot(CO2_emission.ts)
+xts(CO2_emission.ts, order.by=as.Date(time(CO2_emission.ts)), frequency = 12) -> CO2_emission.xts
+
+# convert CO2.ts to yearly 
+CO2_annual.xts <- to.period(as.xts(CO2.ts), period = "years", frequency = 1, OHLC = FALSE)
+
+# show correlation of CO2 concentration with CO2 emissions
+ccf(as.numeric(CO2_emission.xts['1959::2022']),as.numeric(CO2_annual.xts['1959::2022']))
+cor(as.numeric(CO2_annual.xts[1:64]),as.numeric(CO2_emission.ts[time(CO2_emission.ts) >= 1958]))^2
+```
+CO2 emissions explain nearly 96% of the variability in CO2 concentration.
+
+So what? 
+1. The climate is changing (non-stationary)
+2. One major cause of non-stat is increasing trend in global temp
+3. global temp increase not explained by solar activity increase
+4. global temp increase is explained by CO2 concentration increase
+5. CO2 concentration increase is caused (at least in part) by CO2 emission increase
+
+Does CO2 emission increase cause increase in climate disaster freq?
+```{r}
+View(CC_data$`Climate Disaster`)
+disasters.ts <- ts(CC_data$`Climate Disaster`$Count, start=1980, frequency = 1)
+plot(disasters.ts)
+
+# show correlation of CO2 emissions with disasters
+ccf(as.numeric(disasters.ts[time(disasters.ts) <= 2021]),as.numeric(CO2_emission.ts[time(CO2_emission.ts) >= 1980]))
+cor(as.numeric(disasters.ts[time(disasters.ts) <= 2021]),as.numeric(CO2_emission.ts[time(CO2_emission.ts) >= 1980]))^2
+```
+CO2 emissions explain about 63% of the variability in climate disasters
+
+```{r}
+df = data.frame(disaster_freq=as.numeric(disasters.ts[time(disasters.ts) <= 2021]), co2_emissions=as.numeric(CO2_emission.ts[time(CO2_emission.ts) >= 1980]))
+summary(m1 <- glm(disaster_freq ~ co2_emissions , family="poisson", data=df))
+```
+

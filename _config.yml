@@ -11,11 +11,11 @@ descartes_courses:
 name: descartes-modules
 baseurl: /descartes-modules
 safe: false
-morea_theme: cerulean
+morea_theme: spacelab
 timezone: Pacific/Honolulu
 morea_navbar_items:
 # - Prerequisites
-# - Modules
+ - Modules
 #- Outcomes
 #- Readings
 #- Experiences

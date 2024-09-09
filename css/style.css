@@ -1,5 +1,15 @@
 /* Use this file to make simple customizations to your site theme. */
 
+/* Make link anchors aware of sticky navbar */
+:target {
+  scroll-margin-top: 60px;
+}
+
+/* Make the Google Slide embeds responsive. */
+.responsive-iframe iframe {
+  max-width: 100%;
+}
+
 /* Make the YouTube Videos responsive. */
 .video-container {
     position: relative;
@@ -18,3 +28,25 @@
     height: 100%;
 }
 
+.card:hover {
+  box-shadow: 5px 6px 6px 2px #e9ecef;
+  filter: brightness(95%);
+}
+
+.section-background-1 {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+.section-background-2 {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+
+h1, h2, h3 {
+  margin-top: .20em;
+}
+
+small {
+  font-size: .7em
+}

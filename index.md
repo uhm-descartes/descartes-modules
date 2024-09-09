@@ -1,15 +1,14 @@
 ---
 layout: default
 title: Home
-topdiv: container
 ---
 
-{% if site.morea_home_page %}
-  {{ site.morea_home_page.content | markdownify }}
-{% else %}
-  No home page content supplied.
-{% endif %}
+{% include breadcrumb.html %}
 
-<script>
-console.log(`{{ site.descartes_courses }}`);
-</script>
+<div class="container">
+  {% if site.morea_home_page %}
+    {{ site.morea_home_page.content | markdownify }}
+  {% else %}
+    No home page content supplied.
+  {% endif %}
+</div>
