@@ -11,16 +11,16 @@ morea_labels:
 
 # 3. Workshop Setup
 
-Now that you've learned a bit about best practices for workshop design, we're going to dive into the weeds with the mechanics of building a workshop for the HI-DSI workshop series. 
+Now that you've learned a bit about best practices for workshop design, we're going to dive into the weeds with the mechanics of building a workshop for the DESCARTES NRT workshop series. 
 
 ## Workflow overview
 
 In general, the process looks like this:
 
-1. You will make a *fork* of the Change-HI GitHub repository.
+1. You will make a *fork* of the uhm-descartes/descartes-modules GitHub repository.
 2. You create the contents of your workshop within your local fork.
-3. When you have a version ready to use or review, you create a *pull request*. Your pull request will be reviewed by a Change-HI administrator, and if there are no significant problems, your pull request will be *merged* into the Change-HI repository.
-4. After merging, your workshop is *published* and ready for use at <https://change-hi.github.io>.
+3. When you have a version ready to use or review, you create a *pull request*. Your pull request will be reviewed by a UHM-DESCARTES administrator, and if there are no significant problems, your pull request will be *merged* into the uhm-descartes/descartes-modules repository.
+4. After merging, your workshop is *published* and ready for use at <https://descartes.manoa.hawaii.edu/descartes-modules>.
 
 
 <div class="alert alert-info" role="alert" markdown="1">
@@ -33,9 +33,9 @@ If you'd like to learn more about these concepts, see GitHub's documentation on 
 
 Let's now step through each of these steps.
 
-## Make a fork of change-hi.github.io
+## Make a fork of uhm-descartes/descartes-modules
 
-In a browser, go to <https://github.com/change-hi/change-hi.github.io>. Make sure you are logged in to your GitHub account. (If you don't have a GitHub account, you need to create one now by going to <https://github.com/join>.) The page looks like this:
+In a browser, go to <https://github.com/uhm-descartes/descartes-modules>. Make sure you are logged in to your GitHub account. (If you don't have a GitHub account, you need to create one now by going to <https://github.com/join>.) The page looks like this:
 
 <img src="./fig/fork-1.png" width="100%">
 
@@ -117,7 +117,7 @@ If you put your mouse over the Server address, you will get a "Follow link" popu
 
 <img src="./fig/gitpod-10.png" width="100%">
 
-Click the "Follow link" popup button and your own, personal, local copy of the Change-HI repo will be displayed in your browser:
+Click the "Follow link" popup button and your own, personal, local copy of the uhm-descartes/descartes-modules repo will be displayed in your browser:
 
 <img src="./fig/gitpod-11.png" width="100%">
 

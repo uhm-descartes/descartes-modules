@@ -9,6 +9,8 @@ morea_labels:
   - 3:25pm-3:30pm
 ---
 
+# TODO: How do we want to structure this page?
+
 # 6. Workshop Development, Part 3
 
 In this section, you'll commit your changes and make a pull request so that the Change-HI administrators can merge your workshop into the published site. 

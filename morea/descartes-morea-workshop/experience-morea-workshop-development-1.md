@@ -9,9 +9,11 @@ morea_labels:
   - 2:45pm-3:00pm
 ---
 
+# TODO: How do we want to structure this page?
+
 # 4. Workshop Development
 
-If you've gotten this far, you should now have your own personal version of the Change-HI workshop site running in your own browser. 
+If you've gotten this far, you should now have your own personal version of the UHM DESCARTES workshop site running in your own browser. 
 
 In this section, you'll start to learn how to add content to build your own workshop. 
 

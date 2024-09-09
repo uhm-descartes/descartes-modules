@@ -11,7 +11,7 @@ morea_labels:
 
 # 8. What's next?
 
-All of the Data Science Fellows will assist in the development of a workshop. Today, we've introduced you to two important facets of workshop development:
+All of the UHM DESCARTES NRT Fellows will assist in the development of a workshop. Today, we've introduced you to two important facets of workshop development:
 
 1. How to design a workshop. What are the characteristics of a high quality workshop?  These characteristics are summarized in [Workshop Design Checklist](https://morea-framework.github.io/docs/change-hi/workshop-design-checklist)
 

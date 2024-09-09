@@ -13,7 +13,7 @@ morea_labels:
 
 Let's see who has the best recipe! 
 
-Put the URL to your running site into the Slack ChangeHI #general channel so we can see each other's work.
+Put the URL to your running site into the UHM NRT Discord #general channel so we can see each other's work.
 
 {% include next-button.html
 top-label="What's next? ->"
