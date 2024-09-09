@@ -10,7 +10,8 @@ morea_labels:
 morea_url: https://morea-framework.github.io/docs/change-hi/workshop-design-checklist
 ---
 
-## Morea Reference Guide
+# **TODO:** Change content to match the title and summary
+## Morea Workshop Design Checklist
 
 This workshop introduces you to the design of workshops and their implementation using the Morea Framework. 
 
@@ -25,4 +26,4 @@ However, once you start working on a real workshop (as opposed to a fake worksho
 
 To help you learn how to do these things, you should consult the [Morea Framework Change-HI documentation](https://morea-framework.github.io/docs/category/change-hi). 
 
-Of course, you can always also seek guidance from your faculty sponsor or Philip Johnson. 
+Of course, you can always also seek guidance from your faculty sponsor. 
