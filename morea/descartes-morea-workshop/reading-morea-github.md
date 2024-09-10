@@ -7,9 +7,10 @@ morea_summary: "Join GitHub"
 morea_sort_order: 1
 morea_labels:
   - Pre-module preparation
+  - 5min
 ---
 
-# Get ready for the Morea module
+# Get ready for the Morea Module
 
 ## 1. Sign up with GitHub
 

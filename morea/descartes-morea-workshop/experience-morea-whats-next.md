@@ -6,7 +6,7 @@ morea_type: experience
 morea_summary: "How to apply your module design and implementation skills in future"
 morea_sort_order: 3
 morea_labels:
-  - 3:35pm-3:40pm
+  - 10min
 ---
 
 # 8. What's next?
@@ -32,5 +32,4 @@ We encourage you to approach your module development activity in the following w
 
 {% include next-button.html
 top-label="Pick your module ->"
-bottom-label="3:40pm"
 url="/morea/morea/experience-morea-pick-your-module.html" %}

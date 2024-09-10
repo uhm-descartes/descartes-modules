@@ -6,12 +6,10 @@ morea_type: experience
 morea_summary: "Unlock the Best Ever Recipe module"
 morea_sort_order: 3
 morea_labels:
-  - 2:45pm-3:00pm
+  - 20min
 ---
 
-# TODO: How do we want to structure this page?
-
-# 4. Module Development
+# 4. Module Development, Part 1
 
 If you've gotten this far, you should now have your own personal version of the UHM DESCARTES module site running in your own browser. 
 
@@ -21,10 +19,10 @@ In this section, you'll start to learn how to add content to build your own modu
 <i class="fa-solid fa-globe fa-xl"></i> **Best Recipe Ever!**
 <hr/>
 
-There is a "secret" module in the Change-HI repository called "Best Recipe Ever". It is unpublished by default.  In this part of the module, you are going to edit this module to create a simple module that teaches everyone how to cook (what you consider to be) the best recipe ever!
+There is a "secret" module in the UHM DESCARTES Modules repository called "Best Recipe Ever". It is unpublished by default.  In this part of the module, you are going to edit this module to create a simple module that teaches everyone how to cook (what you consider to be) the best recipe ever!
 </div>
 
-## Publish the Best Recipe Ever module module
+## Publish the Best Recipe Ever module
 
 Open the morea directory in your browser-based VS Code editor, then open the file named "module-best-recipe-ever.md". You should see something like the following displayed in your browser:
 
@@ -68,5 +66,4 @@ Let's take a brief break to stretch before moving on to the next page.  See you 
 
 {% include next-button.html
 top-label="Experience Module Development, Part 2 ->"
-bottom-label="3:00pm"
 url="/morea/morea/experience-morea-module-development-2.html" %}

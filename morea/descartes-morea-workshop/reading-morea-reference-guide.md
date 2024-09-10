@@ -7,6 +7,7 @@ morea_summary: "Documentation on the Morea System"
 morea_sort_order: 1
 morea_labels:
   - Post-module resources
+  - 5min
 ---
 
 ## Morea Reference Guide

@@ -6,7 +6,7 @@ morea_type: experience
 morea_summary: "Provide your preferences for the module you will present this year."
 morea_sort_order: 3
 morea_labels:
-  - 3:40pm-3:50pm
+  - 10min
 ---
 
 # 9. Pick your module
@@ -15,5 +15,4 @@ Please fill out [this form](https://docs.google.com/spreadsheets/d/1UAr3QopN_gru
 
 {% include next-button.html
 top-label="Assess this module ->"
-bottom-label="3:50pm"
 url="/morea/morea/assessment-morea-module.html" %}

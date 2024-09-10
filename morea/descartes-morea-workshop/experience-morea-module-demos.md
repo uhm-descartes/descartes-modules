@@ -6,7 +6,7 @@ morea_type: experience
 morea_summary: "Let's see who has the best recipe"
 morea_sort_order: 3
 morea_labels:
-  - 3:30pm-3:35pm
+  - 10min
 ---
 
 # 7. Module Demos
@@ -17,5 +17,4 @@ Put the URL to your running site into the UHM NRT Discord #general channel so we
 
 {% include next-button.html
 top-label="What's next? ->"
-bottom-label="3:35pm"
 url="/morea/morea/experience-morea-whats-next.html" %}

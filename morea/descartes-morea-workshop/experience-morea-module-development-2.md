@@ -6,10 +6,8 @@ morea_type: experience
 morea_summary: "Document your choice for the Best Ever Recipe "
 morea_sort_order: 3
 morea_labels:
-  - 3:00pm-3:25pm
+  - 30min
 ---
-
-# TODO: How do we want to structure this page?
 
 # 5. Module Development, Part 2
 
@@ -24,16 +22,6 @@ You or your group must first decide what is, in fact, The Best Recipe Ever.
 Definitely spend a few minutes arguing about this topic, because it's fun. There can be legitimate differences of opinion!  But come to some sort of decision fairly quickly so you have time to actually document the recipe.
 
 If you don't cook, then think up a dish that you love at a restaurant, and then google for a recipe for that dish. That's close enough for today.
-
-## Edit the Ice Breaker
-
-Every (good) module begins with an Ice Breaker: a way for folks to get to know each other.  
-
-Edit the experience-best-recipe-ever-ice-breaker.md file with your idea for an ice breaker. 
-
-When you've edited the file, click the mouse to make the Terminal pane active, then type `control-c control-p return`.  This stops the running process, and restarts it to rebuild the site. 
-
-Now refresh the window displaying the site in your browser and you should see your changes. 
 
 ## Edit the shopping page
 
@@ -71,5 +59,4 @@ Spend a couple of minutes seeing if you can figure out what went wrong. If you d
 
 {% include next-button.html
 top-label="Experience Module Development, Part 3 ->"
-bottom-label="3:25pm"
 url="/morea/morea/experience-morea-module-development-3.html" %}

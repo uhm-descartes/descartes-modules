@@ -6,14 +6,12 @@ morea_type: experience
 morea_summary: "Commit your changes and make a pull request"
 morea_sort_order: 3
 morea_labels:
-  - 3:25pm-3:30pm
+  - 30min
 ---
-
-# TODO: How do we want to structure this page?
 
 # 6. Module Development, Part 3
 
-In this section, you'll commit your changes and make a pull request so that the Change-HI administrators can merge your module into the published site. 
+In this section, you'll commit your changes and make a pull request so that the DESCARTES Modules administrators can merge your module into the published site. 
 
 ## Give GitPod permission to make pull requests at GitHub
 
@@ -46,7 +44,7 @@ Make sure all of the permissions are selected, then click "Update Permissions".
 
 Now GitPod has all of the permissions necessary to commit your changes and make a pull request, which we'll do in the next step.
 
-## Commit your changes to your fork of the change-hi.github.io repository
+## Commit your changes to your forked repository
 
 Now return to the browser tab that displays your repository.
 
@@ -72,10 +70,9 @@ If all goes well, you should see a summary of your pull request displayed in the
 
 <img src="./fig/commit-5.png" width="100%">
 
-You're done!  The Change-HI administrators should be notified of your pull request. If you haven't heard anything within a day or two, please email them. (The current administrator is Philip Johnson, johnson@hawaii.edu)
+You're done!  The DESCARTES Module administrators should be notified of your pull request. If you haven't heard anything within a day or two, please email them. (The current administrator is Philip Johnson, johnson@hawaii.edu)
 
 
 {% include next-button.html
 top-label="Demo Time! ->"
-bottom-label="3:30pm"
 url="/morea/morea/experience-morea-module-demos.html" %}

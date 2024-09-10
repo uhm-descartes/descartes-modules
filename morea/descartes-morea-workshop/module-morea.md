@@ -1,5 +1,5 @@
 ---
-title: "Design and Implementation of Modules"
+title: "Design and Implementation of DESCARTES Modules"
 published: true
 morea_coming_soon: false
 morea_id: morea

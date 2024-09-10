@@ -6,7 +6,7 @@ morea_type: experience
 morea_summary: "Set up a local copy of the Module repo"
 morea_sort_order: 3
 morea_labels:
-  - 2:30pm-2:45pm
+  - 15min
 ---
 
 # 3. Module Setup
@@ -33,7 +33,7 @@ If you'd like to learn more about these concepts, see GitHub's documentation on 
 
 Let's now step through each of these steps.
 
-## Make a fork of uhm-descartes/descartes-modules
+## Make a fork
 
 In a browser, go to <https://github.com/uhm-descartes/descartes-modules>. Make sure you are logged in to your GitHub account. (If you don't have a GitHub account, you need to create one now by going to <https://github.com/join>.) The page looks like this:
 
@@ -71,7 +71,7 @@ After continuing with GitHub, you should be on the "Workspaces" page:
 
 <img src="./fig/gitpod-3.png" width="100%">
 
-Click the "New Workspace" button. This will display a new window and ask that you select one of your repositories. You want to select your forked version of change-hi.github.io:
+Click the "New Workspace" button. This will display a new window and ask that you select one of your repositories. You want to select your forked version of uhm-descartes/descartes-modules:
 
 <img src="./fig/gitpod-4.png" width="100%">
 
@@ -79,7 +79,7 @@ After you do that, you should see a page like this containing the options for cr
 
 <img src="./fig/gitpod-5.png" width="100%">
 
-The default options (VS COde, Standard) are perfectly fine. You can go ahead and click the "Autostart with these options for this repository", and then click "Continue". 
+The default options (VS Code, Standard) are perfectly fine. You can go ahead and click the "Autostart with these options for this repository", and then click "Continue". 
 
 A new screen will pop up that displays a cloud-based version of the VS Code editor.  There will be an open Terminal window with some green text scrolling by as various tools and libraries are installed. Just sit tight (1-2 minutes) until this installation finishes. You'll know it's done because you'll see a unix command prompt (in blue) at the bottom of the screen:
 
@@ -125,5 +125,4 @@ Congratulations!  You have now installed your own copy of the module repo and yo
 
 {% include next-button.html
 top-label="4. Module development, Part 1 ->"
-bottom-label="2:45pm"
 url="/morea/morea/experience-morea-module-development-1.html" %}

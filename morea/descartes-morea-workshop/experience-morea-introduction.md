@@ -6,7 +6,7 @@ morea_type: experience
 morea_summary: "What are modules? How are they different from seminars?"
 morea_sort_order: 3
 morea_labels:
-  - 2:10pm-2:30pm
+  - 10min
 ---
 
 # 2. Introduction to Module development using Morea
@@ -20,5 +20,4 @@ morea_labels:
 
 {% include next-button.html 
            top-label="3. Module setup ->" 
-           bottom-label="2:30-3:00pm" 
            url="/morea/morea/experience-morea-module-setup.html" %}

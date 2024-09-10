@@ -7,10 +7,10 @@ morea_summary: "Heuristics for high quality module designs"
 morea_sort_order: 1
 morea_labels:
   - Post-module resources
+  - 5min
 morea_url: https://morea-framework.github.io/docs/change-hi/module-design-checklist
 ---
 
-# **TODO:** Change content to match the title and summary
 ## Morea Module Design Checklist
 
 This module introduces you to the design of modules and their implementation using the Morea Framework. 

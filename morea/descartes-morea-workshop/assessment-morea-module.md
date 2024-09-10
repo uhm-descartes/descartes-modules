@@ -8,7 +8,7 @@ morea_outcomes_assessed:
 morea_type: assessment
 morea_sort_order: 12
 morea_labels:
-  - 3:50pm 
+  - 10min
 ---
 
 # Help us assess this module
