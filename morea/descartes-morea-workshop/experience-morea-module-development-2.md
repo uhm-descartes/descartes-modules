@@ -1,5 +1,5 @@
 ---
-title: "5. Workshop Development, Part 2"
+title: "5. Module Development, Part 2"
 published: true
 morea_id: experience-morea-module-development-2
 morea_type: experience
@@ -11,7 +11,7 @@ morea_labels:
 
 # TODO: How do we want to structure this page?
 
-# 5. Workshop Development, Part 2
+# 5. Module Development, Part 2
 
 You have 25 minutes to work either alone or in a group to create an actual module on how to prepare the Best Recipe Ever. 
 
@@ -70,6 +70,6 @@ Spend a couple of minutes seeing if you can figure out what went wrong. If you d
 
 
 {% include next-button.html
-top-label="Experience Workshop Development, Part 3 ->"
+top-label="Experience Module Development, Part 3 ->"
 bottom-label="3:25pm"
 url="/morea/morea/experience-morea-module-development-3.html" %}

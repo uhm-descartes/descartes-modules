@@ -1,5 +1,5 @@
 ---
-title: "2. Introduction to Workshop Development using Morea"
+title: "2. Introduction to Module Development using Morea"
 published: true
 morea_id: experience-morea-introduction
 morea_type: experience
@@ -9,7 +9,7 @@ morea_labels:
   - 2:10pm-2:30pm
 ---
 
-# 2. Introduction to Workshop development using Morea
+# 2. Introduction to Module development using Morea
 
 <div class="responsive-iframe">
 <!-- this is the embed code provided by Google -->
@@ -19,6 +19,6 @@ morea_labels:
 
 
 {% include next-button.html 
-           top-label="3. Workshop setup ->" 
+           top-label="3. Module setup ->" 
            bottom-label="2:30-3:00pm" 
            url="/morea/morea/experience-morea-module-setup.html" %}

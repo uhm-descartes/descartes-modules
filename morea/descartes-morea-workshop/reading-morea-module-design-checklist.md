@@ -1,5 +1,5 @@
 ---
-title: "Workshop Design Checklist"
+title: "Module Design Checklist"
 published: true
 morea_id: reading-morea-module-design-checklist
 morea_type: reading
@@ -11,7 +11,7 @@ morea_url: https://morea-framework.github.io/docs/change-hi/module-design-checkl
 ---
 
 # **TODO:** Change content to match the title and summary
-## Morea Workshop Design Checklist
+## Morea Module Design Checklist
 
 This module introduces you to the design of modules and their implementation using the Morea Framework. 
 

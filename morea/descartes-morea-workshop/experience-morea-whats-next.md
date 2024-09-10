@@ -13,9 +13,9 @@ morea_labels:
 
 All of the UHM DESCARTES NRT Fellows will assist in the development of a module. Today, we've introduced you to two important facets of module development:
 
-1. How to design a module. What are the characteristics of a high quality module?  These characteristics are summarized in [Workshop Design Checklist](https://morea-framework.github.io/docs/change-hi/module-design-checklist)
+1. How to design a module. What are the characteristics of a high quality module?  These characteristics are summarized in [Module Design Checklist](https://morea-framework.github.io/docs/change-hi/module-design-checklist)
 
-2. How to implement a module in the Change-HI site using the Morea framework. More details about implementation are available in [Change-HI Workshop Design Guide](https://morea-framework.github.io/docs/category/change-hi).
+2. How to implement a module in the Change-HI site using the Morea framework. More details about implementation are available in [Change-HI Module Design Guide](https://morea-framework.github.io/docs/category/change-hi).
 
 We encourage you to approach your module development activity in the following way:
 
@@ -23,9 +23,9 @@ We encourage you to approach your module development activity in the following w
 
 2. Meet with the faculty advisor about the module at least three weeks prior to the module date. Develop a plan for its design and implementation.
 
-3. If the module has been held before, then: (a) review the assessment results for that module, and (b) review the current module design for conformance to the Workshop Design Checklist.
+3. If the module has been held before, then: (a) review the assessment results for that module, and (b) review the current module design for conformance to the Module Design Checklist.
 
-4. Implement (or improve the implementation) of your chosen module, attempting to conform to the Workshop Design Checklist whenever possible.
+4. Implement (or improve the implementation) of your chosen module, attempting to conform to the Module Design Checklist whenever possible.
 
 5. Submit your first Pull Request at least one week prior to the module date, so that your module can be reviewed and any issues found can be resolved prior to holding the module.
 

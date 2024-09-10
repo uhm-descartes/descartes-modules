@@ -1,5 +1,5 @@
 ---
-title: "Design and Implementation of Workshops"
+title: "Design and Implementation of Modules"
 published: true
 morea_coming_soon: false
 morea_id: morea
@@ -25,7 +25,7 @@ morea_prerequisites:
 morea_type: module
 morea_icon_url: /morea/morea/morea-logo.png
 morea_labels:
-  - Workshop
+  - Module
 morea_sort_order: 10
 ---
 

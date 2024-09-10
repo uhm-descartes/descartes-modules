@@ -1,5 +1,5 @@
 ---
-title: "Get ready for the Morea Workshop"
+title: "Get ready for the Morea Module"
 published: true
 morea_id: reading-morea-github
 morea_type: reading

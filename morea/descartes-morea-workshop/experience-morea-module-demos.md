@@ -1,5 +1,5 @@
 ---
-title: "7. Workshop Demos"
+title: "7. Module Demos"
 published: true
 morea_id: experience-morea-module-demos
 morea_type: experience
@@ -9,7 +9,7 @@ morea_labels:
   - 3:30pm-3:35pm
 ---
 
-# 7. Workshop Demos
+# 7. Module Demos
 
 Let's see who has the best recipe! 
 

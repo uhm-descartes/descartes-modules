@@ -19,7 +19,7 @@ morea_prerequisites:
 morea_type: module
 morea_icon_url: /morea/time-series-analysis/fig/tsa_logo.png
 morea_labels:
-  - Workshop
+  - Module
 morea_sort_order: 80
 ---
 

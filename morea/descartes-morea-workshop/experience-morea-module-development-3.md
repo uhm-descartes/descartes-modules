@@ -1,5 +1,5 @@
 ---
-title: "6. Workshop Development, Part 3"
+title: "6. Module Development, Part 3"
 published: true
 morea_id: experience-morea-module-development-3
 morea_type: experience
@@ -11,7 +11,7 @@ morea_labels:
 
 # TODO: How do we want to structure this page?
 
-# 6. Workshop Development, Part 3
+# 6. Module Development, Part 3
 
 In this section, you'll commit your changes and make a pull request so that the Change-HI administrators can merge your module into the published site. 
 

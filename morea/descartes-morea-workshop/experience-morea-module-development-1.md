@@ -1,5 +1,5 @@
 ---
-title: "4. Workshop Development, Part 1"
+title: "4. Module Development, Part 1"
 published: true
 morea_id: experience-morea-module-development-1
 morea_type: experience
@@ -11,7 +11,7 @@ morea_labels:
 
 # TODO: How do we want to structure this page?
 
-# 4. Workshop Development
+# 4. Module Development
 
 If you've gotten this far, you should now have your own personal version of the UHM DESCARTES module site running in your own browser. 
 
@@ -67,6 +67,6 @@ Let's take a brief break to stretch before moving on to the next page.  See you 
 
 
 {% include next-button.html
-top-label="Experience Workshop Development, Part 2 ->"
+top-label="Experience Module Development, Part 2 ->"
 bottom-label="3:00pm"
 url="/morea/morea/experience-morea-module-development-2.html" %}

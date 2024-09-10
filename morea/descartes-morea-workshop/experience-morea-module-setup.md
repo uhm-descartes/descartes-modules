@@ -1,15 +1,15 @@
 ---
-title: "3. Workshop Setup"
+title: "3. Module Setup"
 published: true
 morea_id: experience-morea-module-setup
 morea_type: experience
-morea_summary: "Set up a local copy of the Workshop repo"
+morea_summary: "Set up a local copy of the Module repo"
 morea_sort_order: 3
 morea_labels:
   - 2:30pm-2:45pm
 ---
 
-# 3. Workshop Setup
+# 3. Module Setup
 
 Now that you've learned a bit about best practices for module design, we're going to dive into the weeds with the mechanics of building a module for the DESCARTES NRT module series. 
 
@@ -124,6 +124,6 @@ Click the "Follow link" popup button and your own, personal, local copy of the u
 Congratulations!  You have now installed your own copy of the module repo and you are ready to start adding the content for your module.
 
 {% include next-button.html
-top-label="4. Workshop development, Part 1 ->"
+top-label="4. Module development, Part 1 ->"
 bottom-label="2:45pm"
 url="/morea/morea/experience-morea-module-development-1.html" %}
