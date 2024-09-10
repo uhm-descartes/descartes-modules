@@ -13,7 +13,7 @@ morea_labels:
 
 <div class="responsive-iframe">
 <!-- this is the embed code provided by Google -->
-  <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQlJfKYUhc0QWeP4mZKshZoGVOF8XThSlKdDLfotj5RS2KHe-ynW-n43COXJpvEoZit8zTmsUOS5FaZ/embed?start=false&loop=false&delayms=6000000" frameborder="0" width="1440" height="760" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+  <iframe src="https://docs.google.com/presentation/d/1-b_bijc4ltZXF3vxy8gR6STqnFkw5NI4W1N6dw_WS1M/edit?usp=sharing" frameborder="0" width="1440" height="760" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 <!-- Google embed ends -->
 </div>
 

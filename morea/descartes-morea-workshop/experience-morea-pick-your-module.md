@@ -13,6 +13,8 @@ morea_labels:
 
 Please fill out [this form](https://docs.google.com/spreadsheets/d/1UAr3QopN_grumXWrSyn8dVCo6rRerYDO5Yeno6Lpv7s/edit#gid=0) to express your preferences for what modules you would like to develop and present this year.
 
-{% include next-button.html
-top-label="Assess this module ->"
-url="/morea/morea/assessment-morea-module.html" %}
+Here are some sources of module material you may consider using:
+- [DESCSRTES Course sites](https://descartes.manoa.hawaii.edu/descartes-modules/course-sites/)
+- [Business Intelligence case studies](https://dport96.github.io/Elementary-Business-Analytics-Case-Book/)
+- Discuss with your mentors modules they would like made
+- Your own interests

@@ -1,0 +1,21 @@
+<div id="course_cards_div" class="container d-flex justify-content-center align-items-center"></div>
+
+<script>
+    const generateCourseCard = (course) => {
+      return `
+        <div class="col-sm-3">
+          <a href="${course.url}" class="thumbnail">
+            <h4 style="text-align: center; margin-bottom: 0px">${course.num}</h4>
+            <h3 style="text-align: center; margin-top: 5px">${course.name}</h3>
+            <p>${course.description.split(" ").slice(0,15).join(" ")}</p>
+          </a>
+        </div>
+      `;
+    };
+    
+    for(let i in courses) {
+        if(i%3 === 0) course_cards_div.innerHTML += '<div class="row">';
+        course_cards_div.innerHTML += generateCourseCard(courses[i]);
+        if(i%3 === 0) course_cards_div.innerHTML += '</div>';
+    }
+</script>

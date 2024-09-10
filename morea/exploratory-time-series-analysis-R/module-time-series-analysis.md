@@ -17,7 +17,7 @@ morea_assessments:
   - 40-tsa-assessment
 morea_prerequisites:
 morea_type: module
-morea_icon_url: /morea/time-series-analysis/fig/tsa_logo.png
+morea_icon_url: /morea/exploratory-time-series-analysis-R/fig/tsa_logo.png
 morea_labels:
   - Module
 morea_sort_order: 80

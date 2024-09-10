@@ -23,7 +23,7 @@ morea_assessments:
   - assessment-morea-module
 morea_prerequisites:
 morea_type: module
-morea_icon_url: /morea/morea/morea-logo.png
+morea_icon_url: /morea/descartes-morea-workshop/morea-logo.png
 morea_labels:
   - Module
 morea_sort_order: 10

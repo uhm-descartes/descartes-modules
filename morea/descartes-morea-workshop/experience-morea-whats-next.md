@@ -13,9 +13,9 @@ morea_labels:
 
 All of the UHM DESCARTES NRT Fellows will assist in the development of a module. Today, we've introduced you to two important facets of module development:
 
-1. How to design a module. What are the characteristics of a high quality module?  These characteristics are summarized in [Module Design Checklist](https://morea-framework.github.io/docs/change-hi/module-design-checklist)
+1. How to design a module. What are the characteristics of a high quality module?  These characteristics are summarized in [Module Design Checklist](https://morea-framework.github.io/docs/change-hi/module-design-checklist) **THIS WILL BE UPDATED FOR DESCARTES**
 
-2. How to implement a module in the Change-HI site using the Morea framework. More details about implementation are available in [Change-HI Module Design Guide](https://morea-framework.github.io/docs/category/change-hi).
+2. How to implement a module in the Change-HI site using the Morea framework. More details about implementation are available in [Change-HI Module Design Guide](https://morea-framework.github.io/docs/category/change-hi).  **THIS WILL BE UPDATED FOR DESCARTES**
 
 We encourage you to approach your module development activity in the following way:
 
