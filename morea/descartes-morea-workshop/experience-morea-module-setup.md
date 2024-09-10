@@ -1,7 +1,7 @@
 ---
 title: "3. Workshop Setup"
 published: true
-morea_id: experience-morea-workshop-setup
+morea_id: experience-morea-module-setup
 morea_type: experience
 morea_summary: "Set up a local copy of the Workshop repo"
 morea_sort_order: 3
@@ -11,16 +11,16 @@ morea_labels:
 
 # 3. Workshop Setup
 
-Now that you've learned a bit about best practices for workshop design, we're going to dive into the weeds with the mechanics of building a workshop for the DESCARTES NRT workshop series. 
+Now that you've learned a bit about best practices for module design, we're going to dive into the weeds with the mechanics of building a module for the DESCARTES NRT module series. 
 
 ## Workflow overview
 
 In general, the process looks like this:
 
 1. You will make a *fork* of the uhm-descartes/descartes-modules GitHub repository.
-2. You create the contents of your workshop within your local fork.
+2. You create the contents of your module within your local fork.
 3. When you have a version ready to use or review, you create a *pull request*. Your pull request will be reviewed by a UHM-DESCARTES administrator, and if there are no significant problems, your pull request will be *merged* into the uhm-descartes/descartes-modules repository.
-4. After merging, your workshop is *published* and ready for use at <https://descartes.manoa.hawaii.edu/descartes-modules>.
+4. After merging, your module is *published* and ready for use at <https://descartes.manoa.hawaii.edu/descartes-modules>.
 
 
 <div class="alert alert-info" role="alert" markdown="1">
@@ -50,7 +50,7 @@ You can see that this window selects your personal account by default, which is 
 
 ## Set up Gitpod
 
-We recommend that you develop your workshop using a cloud-based based package called Gitpod. Basically, Gitpod provides a unix box pre-installed with all the tools you need to develop your Morea site in the cloud. You access everything through a browser, and edit your site using a browser-based version of Visual Studio Code.  (If, at some later point, you want to switch to local development, you can find out more at [Morea Framework Local Development](https://morea-framework.github.io/docs/category/local-development)).
+We recommend that you develop your module using a cloud-based based package called Gitpod. Basically, Gitpod provides a unix box pre-installed with all the tools you need to develop your Morea site in the cloud. You access everything through a browser, and edit your site using a browser-based version of Visual Studio Code.  (If, at some later point, you want to switch to local development, you can find out more at [Morea Framework Local Development](https://morea-framework.github.io/docs/category/local-development)).
 
 ### Login to GitPod
 
@@ -121,9 +121,9 @@ Click the "Follow link" popup button and your own, personal, local copy of the u
 
 <img src="./fig/gitpod-11.png" width="100%">
 
-Congratulations!  You have now installed your own copy of the workshop repo and you are ready to start adding the content for your workshop.
+Congratulations!  You have now installed your own copy of the module repo and you are ready to start adding the content for your module.
 
 {% include next-button.html
 top-label="4. Workshop development, Part 1 ->"
 bottom-label="2:45pm"
-url="/morea/morea/experience-morea-workshop-development-1.html" %}
+url="/morea/morea/experience-morea-module-development-1.html" %}

@@ -1,7 +1,7 @@
 ---
 title: "7. Workshop Demos"
 published: true
-morea_id: experience-morea-workshop-demos
+morea_id: experience-morea-module-demos
 morea_type: experience
 morea_summary: "Let's see who has the best recipe"
 morea_sort_order: 3

@@ -1,7 +1,7 @@
 ---
 title: "5. Workshop Development, Part 2"
 published: true
-morea_id: experience-morea-workshop-development-2
+morea_id: experience-morea-module-development-2
 morea_type: experience
 morea_summary: "Document your choice for the Best Ever Recipe "
 morea_sort_order: 3
@@ -13,7 +13,7 @@ morea_labels:
 
 # 5. Workshop Development, Part 2
 
-You have 25 minutes to work either alone or in a group to create an actual workshop on how to prepare the Best Recipe Ever. 
+You have 25 minutes to work either alone or in a group to create an actual module on how to prepare the Best Recipe Ever. 
 
 Here are the steps.
 
@@ -27,7 +27,7 @@ If you don't cook, then think up a dish that you love at a restaurant, and then 
 
 ## Edit the Ice Breaker
 
-Every (good) workshop begins with an Ice Breaker: a way for folks to get to know each other.  
+Every (good) module begins with an Ice Breaker: a way for folks to get to know each other.  
 
 Edit the experience-best-recipe-ever-ice-breaker.md file with your idea for an ice breaker. 
 
@@ -53,7 +53,7 @@ Itemized lists, pictures, admonitions, etc are all good to include.
 <i class="fa-solid fa-globe fa-xl"></i> **How do I format text? Add images?**
 <hr/>
 
-You write text in a format called [Markdown](https://www.markdownguide.org/). If you don't want to spend time reading documentation, then there's a pretty easy alternative: just search through other workshops for the kind of formatting you want, and then look at the corresponding file in your browser to see how that workshop author did it!
+You write text in a format called [Markdown](https://www.markdownguide.org/). If you don't want to spend time reading documentation, then there's a pretty easy alternative: just search through other modules for the kind of formatting you want, and then look at the corresponding file in your browser to see how that module author did it!
 
 The [Morea Framework Reference Guide](https://morea-framework.github.io/docs/category/reference) provides more detailed information if you want to do something but can't find someone else who already did it.
 
@@ -72,4 +72,4 @@ Spend a couple of minutes seeing if you can figure out what went wrong. If you d
 {% include next-button.html
 top-label="Experience Workshop Development, Part 3 ->"
 bottom-label="3:25pm"
-url="/morea/morea/experience-morea-workshop-development-3.html" %}
+url="/morea/morea/experience-morea-module-development-3.html" %}

@@ -1,7 +1,7 @@
 ---
 title: "6. Workshop Development, Part 3"
 published: true
-morea_id: experience-morea-workshop-development-3
+morea_id: experience-morea-module-development-3
 morea_type: experience
 morea_summary: "Commit your changes and make a pull request"
 morea_sort_order: 3
@@ -13,7 +13,7 @@ morea_labels:
 
 # 6. Workshop Development, Part 3
 
-In this section, you'll commit your changes and make a pull request so that the Change-HI administrators can merge your workshop into the published site. 
+In this section, you'll commit your changes and make a pull request so that the Change-HI administrators can merge your module into the published site. 
 
 ## Give GitPod permission to make pull requests at GitHub
 
@@ -62,7 +62,7 @@ Once you've selected that option, Gitpod will display a window with details on t
 
 <img src="./fig/commit-3.png" width="100%">
 
-Replace the "Title" field with something informative, such as the name of your workshop and what is being committed. You can leave the description field blank, or else add more details there. 
+Replace the "Title" field with something informative, such as the name of your module and what is being committed. You can leave the description field blank, or else add more details there. 
 
 Scroll down (if necessary) to reveal the "Create" button, and click it:
 
@@ -78,4 +78,4 @@ You're done!  The Change-HI administrators should be notified of your pull reque
 {% include next-button.html
 top-label="Demo Time! ->"
 bottom-label="3:30pm"
-url="/morea/morea/experience-morea-workshop-demos.html" %}
+url="/morea/morea/experience-morea-module-demos.html" %}

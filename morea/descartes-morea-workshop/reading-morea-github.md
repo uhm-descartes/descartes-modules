@@ -6,16 +6,16 @@ morea_type: reading
 morea_summary: "Join GitHub"
 morea_sort_order: 1
 morea_labels:
-  - Pre-workshop preparation
+  - Pre-module preparation
 ---
 
-# Get ready for the Morea workshop
+# Get ready for the Morea module
 
 ## 1. Sign up with GitHub
 
-For the Morea workshop, you will be required to fork a GitHub repository, which will require you to have a GitHub account.
+For the Morea module, you will be required to fork a GitHub repository, which will require you to have a GitHub account.
 
-It will save you a few minutes of time during the workshop if you can create your GitHub account prior to the workshop.
+It will save you a few minutes of time during the module if you can create your GitHub account prior to the module.
 
 If you do not already have a GitHub account, please go to <https://github.com/join> to register. 
 
