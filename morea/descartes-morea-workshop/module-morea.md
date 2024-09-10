@@ -10,7 +10,7 @@ morea_readings:
   - reading-morea-reference-guide
   - reading-morea-workshop-design-checklist
 morea_experiences:
-  - experience-morea-ice-breaker
+  - experience-morea-visions
   - experience-morea-introduction
   - experience-morea-workshop-setup
   - experience-morea-workshop-development-1
@@ -18,7 +18,7 @@ morea_experiences:
   - experience-morea-workshop-development-3
   - experience-morea-workshop-demos
   - experience-morea-whats-next
-  - experience-morea-pick-your-workshop
+  - experience-morea-pick-your-module
 morea_assessments:
   - assessment-morea-workshop
 morea_prerequisites:
