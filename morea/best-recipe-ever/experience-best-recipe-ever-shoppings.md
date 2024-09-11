@@ -1,7 +1,7 @@
 ---
 title: "2. Shop for the best recipe ever"
 published: true
-morea_id: experience-best-recipe-ever-shopping
+morea_id: experience-best-recipe-ever-shoppings
 morea_type: experience
 morea_summary: "Making the best recipe ever requires only a few ingredients"
 morea_sort_order: 3
