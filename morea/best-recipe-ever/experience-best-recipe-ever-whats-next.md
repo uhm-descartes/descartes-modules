@@ -3,7 +3,7 @@ title: "4. What's next?"
 published: true
 morea_id: experience-best-recipe-ever-whats-next
 morea_type: experience
-morea_summary: "After the workshop, what will you do with the best recipe ever? No"
+morea_summary: "After the workshop, what will you do with the best recipe ever? No!"
 morea_sort_order: 3
 morea_labels:
 - 3:40pm-3:50pm
