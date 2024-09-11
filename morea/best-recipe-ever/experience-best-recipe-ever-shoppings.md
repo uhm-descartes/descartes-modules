@@ -9,7 +9,7 @@ morea_labels:
   - 2:10pm-2:30pm
 ---
 
-# 2. Shop for the best recipe ever
+# 2. Shopp for the best recipe ever
 
 *Replace this sentence with your instructions on where to go and what to buy for your best recipe ever. You might want to include some links or photos to help with the instructions.*
 

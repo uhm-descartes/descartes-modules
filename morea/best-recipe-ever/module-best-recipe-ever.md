@@ -1,13 +1,13 @@
 ---
 title: "Best Recipe Ever"
-published: false
+published: True
 morea_coming_soon: false
 morea_id: best-recipe-ever
 morea_outcomes:
   - outcome-best-recipe-ever
 morea_readings:
 morea_experiences:
-  - experience-best-recipe-ever-shopping
+  - experience-best-recipe-ever-shoppings
   - experience-best-recipe-ever-preparation
   - experience-best-recipe-ever-whats-next
 morea_assessments:
