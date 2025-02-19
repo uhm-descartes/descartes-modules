@@ -12,20 +12,20 @@ Welcome to DESCARTES NRT Courses Site, a service of the [DESCARTES NRT Courses S
 ### Purpose
 
 This site supports:
-   * NRT trainees interdisciplinary data science and AI course modules.
-   * Faculty who wish to provide resources or modules to utilize in their courses.
-   * Opensource resources for curriculum material for NRT programs and the community.
 
-
+* NRT trainees interdisciplinary data science and AI course modules.
+* Faculty who wish to provide resources or modules to utilize in their courses.
+* Opensource resources for curriculum material for NRT programs and the community.
 
 ### Contents
 
 This site contains:
 
-  * [Course Sites]({{ site.baseurl }}/course-sites) provides links to selected UHM courses participating in the DESCARTES program.
+* [Course Sites](./course-sites) provides links to selected UHM courses participating in the DESCARTES program.
 
-  * [Course Network]({{ site.baseurl }}/course-network) provides a high-level graphical representation of the structure of the DESCARTES curriculum.
-  
-  * [Module Browser]({{ site.baseurl }}/module-browser) provides a detailed representation of DESCARTES courses at the module-level and dependencies between courses at the module level.
-    
-  * [Suggestion Box]({{ site.baseurl }}/suggestion-box) provides a way for you to participate in the development of this site.  Want to suggest materials for inclusion in a review site? Flag an error in a module?  Use the Suggestion Box to make your improvements known to the site administrators.
+* [Course Network](./course-network) provides a high-level graphical representation of the structure of the DESCARTES curriculum.
+
+* [Module Browser](./module-browser) provides a detailed representation of DESCARTES courses at the module-level and dependencies between courses at the module level.
+
+* [Suggestion Box](./suggestion-box) provides a way for you to participate in the development of this site. Want to suggest materials for inclusion in a review site? Flag an error in a module? Use the Suggestion Box to make your improvements known
+  to the site administrators.
