@@ -21,11 +21,11 @@ This site supports:
 
 This site contains:
 
-* [Course Sites](/descartes-modules/course-sites) provides links to selected UHM courses participating in the DESCARTES program.
+* [Course Sites](./course-sites) provides links to selected UHM courses participating in the DESCARTES program.
 
-* [Course Network](/descartes-modules/course-network) provides a high-level graphical representation of the structure of the DESCARTES curriculum.
+* [Course Network](./course-network) provides a high-level graphical representation of the structure of the DESCARTES curriculum.
 
-* [Module Browser](/descartes-modules/module-browser) provides a detailed representation of DESCARTES courses at the module-level and dependencies between courses at the module level.
+* [Module Browser](./module-browser) provides a detailed representation of DESCARTES courses at the module-level and dependencies between courses at the module level.
 
-* [Suggestion Box](/descartes-modules/suggestion-box) provides a way for you to participate in the development of this site. Want to suggest materials for inclusion in a review site? Flag an error in a module? Use the Suggestion Box to make your improvements known
+* [Suggestion Box](./suggestion-box) provides a way for you to participate in the development of this site. Want to suggest materials for inclusion in a review site? Flag an error in a module? Use the Suggestion Box to make your improvements known
   to the site administrators.
