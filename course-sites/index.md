@@ -7,44 +7,70 @@ topdiv: container
 
 # Course Sites
 
-The following sites are made available for students wishing to review material from courses they have taken.  The materials at each site are taken from prior semesters; you may encounter new and different material if you are taking these courses now
-  or in the future.
+The following sites are made available for students wishing to review material from courses they have taken. The materials at each site are taken from prior semesters; you may encounter new and different material if you are taking these courses now or in the future.
 
 Click on the tiles below to go to the corresponding course.
 
-{% include courses_info.html %}
-
 <div id="course_cards_div" class="container"></div>
 
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
-    const generateCourseCard = (course) => {
-      return `
-        <div class="col-sm-4">  <!-- Change to col-sm-4 for 3 columns -->
-            <div class="card" style="margin-bottom: 20px;">  <!-- Bootstrap card class -->
-                <div class="card-body">
-                <a href="${course.url}" class="thumbnail">
-                    <h4 style="text-align: center; margin-bottom: 0px">${course.num}</h4>
-                    <h3 style="text-align: center; margin-top: 5px">${course.name}</h3>
-                    <p>${course.description.split(" ").slice(0, 15).join(" ")}</p>
-                </a>
-                </div>
-            </div>
-        </div>
-      `;
-    };
-    
-    let rowOpen = false;  // Track if a row is currently open
-    for (let i = 0; i < courses.length; i++) {
+google.charts.load('current', { packages: ['corechart'] });
+google.charts.setOnLoadCallback(drawCourseCards);
+
+function drawCourseCards() {
+    /*  SELECT columns:
+        C  = Course Code
+        D  = Course Title
+        E  = Description
+        G  = URL
+        Tab name in the spreadsheet is “Classes” [If tab name changes, this must be updated]
+    */
+    const queryString = encodeURIComponent('SELECT C, D, E, G');
+    const query = new google.visualization.Query(
+        'https://docs.google.com/spreadsheets/d/1ohObymWxSQxkqOKnbd7lbXIGEqI6Y5S1Do0PaUt1BZg/gviz/tq?sheet=Classes&tq=' + queryString
+    );
+    query.send(handleResponse);
+}
+
+function handleResponse(response) {
+    if (response.isError()) {
+        console.log(response.getMessage(), response.getDetailedMessage());
+        return;
+    }
+
+    const data = response.getDataTable();
+    const numRows = data.getNumberOfRows();
+    const div = document.getElementById('course_cards_div');
+    let rowOpen = false;
+
+    for (let i = 0; i < numRows; i++) {
+        const code = data.getValue(i, 0);          // C = Course Code
+        const title = data.getValue(i, 1);         // D = Course Title
+        const desc  = data.getValue(i, 2) || '';   // E = Description
+        const url   = data.getValue(i, 3) || '#';  // G = URL
+
         if (i % 3 === 0) {
-            if (rowOpen) {
-                course_cards_div.innerHTML += '</div>'; // Close the previous row
-            }
-            course_cards_div.innerHTML += '<div class="row">'; // Start a new row
-            rowOpen = true;  // Mark the row as open
+            if (rowOpen) div.innerHTML += '</div>';   //close the previous row
+            div.innerHTML += '<div class="row">';   //start a new row
+            rowOpen = true;    //mark the row as open
         }
-        course_cards_div.innerHTML += generateCourseCard(courses[i]);
+
+        // Generate and append a course card
+        div.innerHTML += `
+            <div class="col-sm-4">
+                <div class="card" style="margin-bottom:20px;">
+                    <div class="card-body">
+                        <a href="${url}" class="thumbnail">
+                            <h4 style="text-align:center;margin-bottom:0">${code}</h4>
+                            <h3 style="text-align:center;margin-top:5px">${title}</h3>
+                            <p>${desc.split(' ').slice(0, 15).join(' ')}</p>
+                        </a>
+                    </div>
+                </div>
+            </div>`;
     }
-    if (rowOpen) {
-        course_cards_div.innerHTML += '</div>'; // Close the last row if it was opened
-    }
+
+    if (rowOpen) div.innerHTML += '</div>';
+}
 </script>
