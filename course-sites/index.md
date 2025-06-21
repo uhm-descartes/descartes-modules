@@ -11,7 +11,27 @@ The following sites are made available for students wishing to review material f
 
 Click on the tiles below to go to the corresponding course.
 
-<div id="course_cards_div" class="container"></div>
+<div class="container-fluid">
+    <div id="course_cards_div"></div>
+</div>
+
+<style>
+    .course-card {
+        min-width: 280px;
+        max-width: 400px;
+        flex: 1;
+        margin: 10px;
+    }
+    
+    #course_cards_div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly;
+        align-items: stretch;
+        gap: 15px;
+        padding: 20px 0;
+    }
+</style>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
@@ -42,7 +62,8 @@ function handleResponse(response) {
     const data = response.getDataTable();
     const numRows = data.getNumberOfRows();
     const div = document.getElementById('course_cards_div');
-    let rowOpen = false;
+    
+    let cardsHTML = '';
 
     for (let i = 0; i < numRows; i++) {
         const code = data.getValue(i, 0);          // C = Course Code
@@ -50,27 +71,32 @@ function handleResponse(response) {
         const desc  = data.getValue(i, 2) || '';   // E = Description
         const url   = data.getValue(i, 3) || '#';  // G = URL
 
-        if (i % 3 === 0) {
-            if (rowOpen) div.innerHTML += '</div>';   //close the previous row
-            div.innerHTML += '<div class="row">';   //start a new row
-            rowOpen = true;    //mark the row as open
-        }
-
-        // Generate and append a course card
-        div.innerHTML += `
-            <div class="col-sm-4">
-                <div class="card" style="margin-bottom:20px;">
+        // Generate course card with flexible layout
+        cardsHTML += `
+            <div class="course-card">
+                <div class="card h-100">
                     <div class="card-body">
-                        <a href="${url}" class="thumbnail">
-                            <h4 style="text-align:center;margin-bottom:0">${code}</h4>
-                            <h3 style="text-align:center;margin-top:5px">${title}</h3>
-                            <p>${desc.split(' ').slice(0, 15).join(' ')}</p>
+                        <a href="${url}" class="text-decoration-none">
+                            <h4 class="text-center mb-0">${code}</h4>
+                            <h3 class="text-center mt-2">${title}</h3>
+                            <p class="card-text">${desc.split(' ').slice(0, 15).join(' ')}...</p>
                         </a>
                     </div>
                 </div>
             </div>`;
     }
 
-    if (rowOpen) div.innerHTML += '</div>';
+    div.innerHTML = cardsHTML;
+    
+    // Add resize listener to optimize layout
+    window.addEventListener('resize', () => {
+        clearTimeout(window.resizeTimer);
+        window.resizeTimer = setTimeout(() => {
+            // Force re-layout on resize
+            div.style.display = 'none';
+            div.offsetHeight; // Trigger reflow
+            div.style.display = 'flex';
+        }, 250);
+    });
 }
 </script>
