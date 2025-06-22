@@ -33,70 +33,64 @@ Click on the tiles below to go to the corresponding course.
     }
 </style>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
-google.charts.load('current', { packages: ['corechart'] });
-google.charts.setOnLoadCallback(drawCourseCards);
+// Load course data when page loads
+document.addEventListener('DOMContentLoaded', drawCourseCards);
 
-function drawCourseCards() {
-    /*  SELECT columns:
-        C  = Course Code
-        D  = Course Title
-        E  = Description
-        G  = URL
-        Tab name in the spreadsheet is “Classes” [If tab name changes, this must be updated]
-    */
-    const queryString = encodeURIComponent('SELECT C, D, E, G');
-    const query = new google.visualization.Query(
-        'https://docs.google.com/spreadsheets/d/1ohObymWxSQxkqOKnbd7lbXIGEqI6Y5S1Do0PaUt1BZg/gviz/tq?sheet=Classes&tq=' + queryString
-    );
-    query.send(handleResponse);
-}
+async function drawCourseCards() {
+    try {
+        // Fetch the CSV file from the current server
+        const response = await fetch('/descartes-modules/course-sites/descartes-courses.csv');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const csvText = await response.text();
+        const rows = csvText.trim().split('\n');
+        
+        const div = document.getElementById('course_cards_div');
+        let cardsHTML = '';
 
-function handleResponse(response) {
-    if (response.isError()) {
-        console.log(response.getMessage(), response.getDetailedMessage());
-        return;
+        // Process each row (name, url, fullname, desc)
+        for (const row of rows) {
+            if (row.trim() === '') continue; // Skip empty rows
+            
+            const [name, url, fullname, desc] = row.split(',').map(field => field.trim());
+            
+            if (name && url && fullname && desc) {
+                // Generate course card with flexible layout
+                cardsHTML += `
+                    <div class="course-card">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <a href="${url}" class="text-decoration-none">
+                                    <h4 class="text-center mb-0">${name}</h4>
+                                    <h3 class="text-center mt-2">${fullname}</h3>
+                                    <p class="card-text">${desc}</p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        }
+
+        div.innerHTML = cardsHTML;
+        
+        // Add resize listener to optimize layout
+        window.addEventListener('resize', () => {
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(() => {
+                // Force re-layout on resize
+                div.style.display = 'none';
+                div.offsetHeight; // Trigger reflow
+                div.style.display = 'flex';
+            }, 250);
+        });
+        
+    } catch (error) {
+        console.error('Error loading course data:', error);
+        document.getElementById('course_cards_div').innerHTML = 
+            '<p class="text-center text-muted">Error loading course data. Please try again later.</p>';
     }
-
-    const data = response.getDataTable();
-    const numRows = data.getNumberOfRows();
-    const div = document.getElementById('course_cards_div');
-    
-    let cardsHTML = '';
-
-    for (let i = 0; i < numRows; i++) {
-        const code = data.getValue(i, 0);          // C = Course Code
-        const title = data.getValue(i, 1);         // D = Course Title
-        const desc  = data.getValue(i, 2) || '';   // E = Description
-        const url   = data.getValue(i, 3) || '#';  // G = URL
-
-        // Generate course card with flexible layout
-        cardsHTML += `
-            <div class="course-card">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <a href="${url}" class="text-decoration-none">
-                            <h4 class="text-center mb-0">${code}</h4>
-                            <h3 class="text-center mt-2">${title}</h3>
-                            <p class="card-text">${desc.split(' ').slice(0, 15).join(' ')}...</p>
-                        </a>
-                    </div>
-                </div>
-            </div>`;
-    }
-
-    div.innerHTML = cardsHTML;
-    
-    // Add resize listener to optimize layout
-    window.addEventListener('resize', () => {
-        clearTimeout(window.resizeTimer);
-        window.resizeTimer = setTimeout(() => {
-            // Force re-layout on resize
-            div.style.display = 'none';
-            div.offsetHeight; // Trigger reflow
-            div.style.display = 'flex';
-        }, 250);
-    });
 }
 </script>
