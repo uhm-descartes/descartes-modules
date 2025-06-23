@@ -147,9 +147,6 @@ async function fetchAndLogCourseData() {
                                             moduleCardsHTML += `
                                                 <div class="col-md-6 col-lg-4" style="padding-bottom: 20px">
                                                     <div class="card h-100">
-                                                        <div class="text-center">
-                                                            <img alt="${moduleTitle}" src="/descartes-modules/modules/default-icon.png" class="card-img-top rounded-circle" style="max-width: 100px; padding-top: 2px" />
-                                                        </div>
                                                         <div class="card-body">
                                                             <h3 class="card-title">${moduleTitle}</h3>
                                                             <p>${moduleDescription}</p>
