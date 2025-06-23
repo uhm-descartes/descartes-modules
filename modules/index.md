@@ -49,88 +49,168 @@ title: Modules
     <div id="course_cards_div"></div>
 </div>
 
-<style>
-    .course-card {
-        min-width: 280px;
-        max-width: 400px;
-        flex: 1;
-        margin: 10px;
-    }
-    
-    #course_cards_div {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-evenly;
-        align-items: stretch;
-        gap: 15px;
-        padding: 20px 0;
-    }
-</style>
-
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script>
-google.charts.load('current', { packages: ['corechart'] });
-google.charts.setOnLoadCallback(drawCourseCards);
+// Load course data when page loads
 
-function drawCourseCards() {
-    /*  SELECT columns:
-        C  = Course Code
-        D  = Course Title
-        E  = Description
-        G  = URL
-        Tab name in the spreadsheet is “Classes” [If tab name changes, this must be updated]
-    */
-    const queryString = encodeURIComponent('SELECT C, D, E, G');
-    const query = new google.visualization.Query(
-        'https://docs.google.com/spreadsheets/d/1ohObymWxSQxkqOKnbd7lbXIGEqI6Y5S1Do0PaUt1BZg/gviz/tq?sheet=Classes&tq=' + queryString
-    );
-    query.send(handleResponse);
+// Function to fetch CSV and load course modules
+async function fetchAndLogCourseData() {
+    try {
+        const url = '/descartes-modules/course-sites/descartes-courses.csv';
+        
+        // Fetch the CSV file from the current server
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+        }
+        
+        const csvText = await response.text();
+        const rows = csvText.trim().split('\n');
+        
+        // Loop through the rows and process each course
+        for (const row of rows) {
+            if (row.trim() === '') continue; // Skip empty rows
+            
+            const [course, course_url, course_name, course_description] = row.split(',').map(field => field.trim());
+            
+            if (course && course_url) {
+                // Fetch module-info.js from the course URL
+                try {
+                    const moduleInfoUrl = `${course_url}module-info.js`;
+                    
+                    const moduleResponse = await fetch(moduleInfoUrl);
+                    
+                    if (moduleResponse.ok) {
+                        const moduleInfoContent = await moduleResponse.text();
+                        
+                        // Parse the module-info.js content to extract modules array using regex
+                        try {
+                            const modulesMatch = moduleInfoContent.match(/modules:\s*\[([\s\S]*?)\]/);
+                            if (modulesMatch) {
+                                const modulesArrayContent = modulesMatch[1];
+                                
+                                // Extract individual module objects using regex
+                                const moduleObjectMatches = modulesArrayContent.match(/\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g);
+                                
+                                if (moduleObjectMatches) {
+                                    
+                                    // Parse each module object
+                                    const moduleObjects = [];
+                                    let moduleCardsHTML = '';
+                                    
+                                    moduleObjectMatches.forEach((moduleStr, index) => {
+                                        try {
+                                            // Convert JavaScript object format to JSON
+                                            let jsonModuleStr = moduleStr
+                                                .replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":')  // Quote property names
+                                                .replace(/:\s*"([^"]*)"([^,}\]]*)/g, ': "$1$2"')  // Handle quoted strings
+                                                .replace(/:\s*'([^']*)'/g, ': "$1"')  // Convert single quotes to double quotes
+                                                .replace(/,(\s*[}\]])/g, '$1');  // Remove trailing commas
+                                            
+                                            const moduleObj = JSON.parse(jsonModuleStr);
+                                            moduleObjects.push(moduleObj);
+                                            
+                                            // Create module card HTML
+                                            const moduleUrl = moduleObj.moduleUrl || '#';
+                                            let fullModuleUrl;
+                                            
+                                            if (moduleUrl.startsWith('http')) {
+                                                // Absolute URL, use as-is
+                                                fullModuleUrl = moduleUrl;
+                                            } else {
+                                                // Relative URL, combine with course_url
+                                                let baseCourseUrl = course_url.endsWith('/') ? course_url.slice(0, -1) : course_url;
+                                                let relativeModuleUrl = moduleUrl.startsWith('/') ? moduleUrl : '/' + moduleUrl;
+                                                
+                                                // Check for overlapping paths
+                                                const courseUrlParts = baseCourseUrl.split('/');
+                                                const moduleUrlParts = relativeModuleUrl.split('/').filter(part => part !== '');
+                                                
+                                                // Find if the last part of course URL matches the first part of module URL
+                                                const lastCourseUrlPart = courseUrlParts[courseUrlParts.length - 1];
+                                                const firstModuleUrlPart = moduleUrlParts[0];
+                                                
+                                                if (lastCourseUrlPart && firstModuleUrlPart && lastCourseUrlPart === firstModuleUrlPart) {
+                                                    // Remove the overlapping part from module URL
+                                                    const cleanModuleUrlParts = moduleUrlParts.slice(1);
+                                                    relativeModuleUrl = cleanModuleUrlParts.length > 0 ? '/' + cleanModuleUrlParts.join('/') : '';
+                                                }
+                                                
+                                                fullModuleUrl = baseCourseUrl + relativeModuleUrl;
+                                            }
+                                            
+                                            const moduleTitle = moduleObj.title || 'Untitled Module';
+                                            const moduleDescription = moduleObj.description || 'No description available';
+                                            const moduleCourse = moduleObj.course || course;
+                                            
+                                            moduleCardsHTML += `
+                                                <div class="col-md-6 col-lg-4" style="padding-bottom: 20px">
+                                                    <div class="card h-100">
+                                                        <div class="card-body">
+                                                            <h5 class="card-title">${moduleTitle}</h5>
+                                                            <h6 class="card-subtitle mb-2 text-muted">${moduleCourse}</h6>
+                                                            <p class="card-text">${moduleDescription}</p>
+                                                        </div>
+                                                        <div class="card-footer">
+                                                            <a href="${fullModuleUrl}" class="btn btn-primary btn-sm">View Module</a>
+                                                        </div>
+                                                    </div>
+                                                </div>`;
+                                            
+                                        } catch (parseError) {
+                                            // Skip modules that can't be parsed
+                                        }
+                                    });
+                                    
+                                    // Insert module cards into the DOM
+                                    if (moduleCardsHTML) {
+                                        const courseCardsDiv = document.getElementById('course_cards_div');
+                                        if (courseCardsDiv) {
+                                            courseCardsDiv.innerHTML += `
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <h3 class="mt-4 mb-3">Modules from ${course}</h3>
+                                                    </div>
+                                                    ${moduleCardsHTML}
+                                                </div>`;
+                                        }
+                                    }
+                                    
+                                } else {
+                                    // No module objects found in array
+                                }
+                            } else {
+                                // Could not find modules array with regex
+                            }
+                        } catch (regexError) {
+                            // Regex parsing failed
+                        }
+                    } else {
+                        // Failed to fetch module-info.js
+                    }
+                } catch (moduleError) {
+                    // Error fetching module-info.js
+                }
+                
+                // Separator comment for next course processing
+            }
+        }
+        
+    } catch (error) {
+        // Error fetching course data
+    }
 }
 
-function handleResponse(response) {
-    if (response.isError()) {
-        console.log(response.getMessage(), response.getDetailedMessage());
-        return;
-    }
+// Call the function when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    fetchAndLogCourseData();
+});
 
-    const data = response.getDataTable();
-    const numRows = data.getNumberOfRows();
-    const div = document.getElementById('course_cards_div');
-    
-    let cardsHTML = '';
-
-    for (let i = 0; i < numRows; i++) {
-        const code = data.getValue(i, 0);          // C = Course Code
-        const title = data.getValue(i, 1);         // D = Course Title
-        const desc  = data.getValue(i, 2) || '';   // E = Description
-        const url   = data.getValue(i, 3) || '#';  // G = URL
-
-        // Generate course card with flexible layout
-        cardsHTML += `
-            <div class="course-card">
-                <div class="card h-100">
-                    <div class="card-body">
-                        <a href="${url}" class="text-decoration-none">
-                            <h4 class="text-center mb-0">${code}</h4>
-                            <h3 class="text-center mt-2">${title}</h3>
-                            <p class="card-text">${desc.split(' ').slice(0, 15).join(' ')}...</p>
-                        </a>
-                    </div>
-                </div>
-            </div>`;
-    }
-
-    div.innerHTML = cardsHTML;
-    
-    // Add resize listener to optimize layout
-    window.addEventListener('resize', () => {
-        clearTimeout(window.resizeTimer);
-        window.resizeTimer = setTimeout(() => {
-            // Force re-layout on resize
-            div.style.display = 'none';
-            div.offsetHeight; // Trigger reflow
-            div.style.display = 'flex';
-        }, 250);
-    });
+// Also try calling it immediately in case DOM is already loaded
+if (document.readyState === 'loading') {
+    // Document still loading, waiting for DOMContentLoaded
+} else {
+    // Document already loaded, calling function immediately
+    fetchAndLogCourseData();
 }
 </script>
