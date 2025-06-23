@@ -142,18 +142,23 @@ async function fetchAndLogCourseData() {
                                             const moduleTitle = moduleObj.title || 'Untitled Module';
                                             const moduleDescription = moduleObj.description || 'No description available';
                                             const moduleCourse = moduleObj.course || course;
+                                            const moduleLabel = moduleObj.descartesModule ? 'DESCARTES module' : 'Module';
                                             
                                             moduleCardsHTML += `
                                                 <div class="col-md-6 col-lg-4" style="padding-bottom: 20px">
                                                     <div class="card h-100">
+                                                        <div class="text-center">
+                                                            <img alt="${moduleTitle}" src="/descartes-modules/modules/default-icon.png" class="card-img-top rounded-circle" style="max-width: 100px; padding-top: 2px" />
+                                                        </div>
                                                         <div class="card-body">
-                                                            <h5 class="card-title">${moduleTitle}</h5>
-                                                            <h6 class="card-subtitle mb-2 text-muted">${moduleCourse}</h6>
-                                                            <p class="card-text">${moduleDescription}</p>
+                                                            <h3 class="card-title">${moduleTitle}</h3>
+                                                            <p>${moduleDescription}</p>
+                                                            <p>
+                                                                <span class="badge bg-primary">${moduleCourse}</span>
+                                                                <span class="badge bg-primary">${moduleLabel}</span>
+                                                            </p>
                                                         </div>
-                                                        <div class="card-footer">
-                                                            <a href="${fullModuleUrl}" class="btn btn-primary btn-sm">View Module</a>
-                                                        </div>
+                                                        <a href="${fullModuleUrl}" class="stretched-link"></a>
                                                     </div>
                                                 </div>`;
                                             
