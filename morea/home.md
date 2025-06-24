@@ -5,27 +5,28 @@ morea_type: home
 published: true
 ---
 
-# DESCARTES NRT Courses Site
+# DESCARTES NRT Curriculum Portal
 
-Welcome to DESCARTES NRT Courses Site, a service of the [DESCARTES NRT](https://descartes.manoa.hawaii.edu/) at the [University of Hawaii at Manoa](http://manoa.hawaii.edu).
+This site is maintained by the [DESCARTES NRT Program](https://descartes.manoa.hawaii.edu/) at the [University of Hawaii at Mānoa](http://manoa.hawaii.edu). It provides access to educational modules developed under the DESCARTES initiative in data science, AI, and transdisciplinary research training.
 
-### Purpose
+### Objectives
 
-This site supports:
+This portal supports:
 
-* NRT trainees interdisciplinary data science and AI course modules.
-* Faculty who wish to provide resources or modules to utilize in their courses.
-* Opensource resources for curriculum material for NRT programs and the community.
+* DESCARTES NRT trainees in accessing integrates course modules across disciplines.
+* Faculty contributing to or incorporating DESCARTES materials into their instruction.
+* The broader academic community seeking open-access resources in data-intensive research education. 
 
-### Contents
+### Resources
 
-This site contains:
+Content overview:
 
-* [Course Sites](./course-sites) provides links to selected UHM courses participating in the DESCARTES program.
+* [Course Sites](./course-sites): Links to participating UH Mānoa courses aligned with DESCARTES objectives. 
 
-* [Course Network](./course-network) provides a high-level graphical representation of the structure of the DESCARTES curriculum.
+* [Course Network](./course-network): A high-level diagram illustrating the curriculum framework and relationships between courses. 
 
-* [Module Browser](./module-browser) provides a detailed representation of DESCARTES courses at the module-level and dependencies between courses at the module level.
+* [Modules](./modules): Standalone instructional units used within and across courses, supporting modular curriculum design and content reuse.
 
-* [Suggestion Box](./suggestion-box) provides a way for you to participate in the development of this site. Want to suggest materials for inclusion in a review site? Flag an error in a module? Use the Suggestion Box to make your improvements known
-  to the site administrators.
+* [Module Browser](./module-browser): An interface for exploring how modules are organized within courses, including progression and cross-course integration. 
+
+* [Suggestion Box](./suggestion-box): Submit feedback, flag errors, or recommend resources for inclusion.
