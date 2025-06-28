@@ -11,9 +11,30 @@ title: Modules
     {{ site.morea_overview_modules.content | markdownify }}
   {% endif %}
   
+  <!-- Filter Section -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Filter Modules</h5>
+          <div class="input-group">
+            <input type="text" class="form-control" id="moduleFilter" placeholder="Type to filter modules by title, description, or course...">
+            <button class="btn btn-outline-secondary" type="button" id="clearFilter">Clear</button>
+          </div>
+          <small class="text-muted mt-2 d-block">
+            <span id="moduleCount">Loading modules...</span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  
   <div class="row">
      {% for module in site.morea_module_pages %}
-        <div class="col-md-6 col-lg-4" style="padding-bottom: 20px">
+        <div class="col-md-6 col-lg-4 module-card-wrapper" style="padding-bottom: 20px"
+             data-title="{{ module.title | downcase | escape }}"
+             data-description="{{ module.morea_summary | strip_html | downcase | escape }}"
+             data-course="descartes">
           <div class="card h-100">
             <div class="text-center">
               <img alt="{{module.title}}" src="{{ site.baseurl }}{{ module.morea_icon_url }}" class="card-img-top rounded-circle" style="max-width: 100px; padding-top: 2px">
@@ -145,7 +166,10 @@ async function fetchAndLogCourseData() {
                                             const moduleLabel = moduleObj.descartesModule ? 'DESCARTES module' : 'Module';
                                             
                                             moduleCardsHTML += `
-                                                <div class="col-md-6 col-lg-4" style="padding-bottom: 20px">
+                                                <div class="col-md-6 col-lg-4 module-card-wrapper" style="padding-bottom: 20px" 
+                                                     data-title="${moduleTitle.toLowerCase()}" 
+                                                     data-description="${moduleDescription.toLowerCase()}" 
+                                                     data-course="${moduleCourse.toLowerCase()}">
                                                     <div class="card h-100">
                                                         <div class="card-body">
                                                             <h3 class="card-title">${moduleTitle}</h3>
@@ -169,9 +193,9 @@ async function fetchAndLogCourseData() {
                                         const courseCardsDiv = document.getElementById('course_cards_div');
                                         if (courseCardsDiv) {
                                             courseCardsDiv.innerHTML += `
-                                                <div class="row">
+                                                <div class="row course-section" data-course="${course.toLowerCase()}">
                                                     <div class="col-12">
-                                                        <h3 class="mt-4 mb-3">Modules from ${course}</h3>
+                                                        <h3 class="mt-4 mb-3 course-header">Modules from ${course}</h3>
                                                     </div>
                                                     ${moduleCardsHTML}
                                                 </div>`;
@@ -214,5 +238,78 @@ if (document.readyState === 'loading') {
 } else {
     // Document already loaded, calling function immediately
     fetchAndLogCourseData();
+}
+
+// Progressive filter functionality
+function setupModuleFilter() {
+    const filterInput = document.getElementById('moduleFilter');
+    const clearButton = document.getElementById('clearFilter');
+    const moduleCountSpan = document.getElementById('moduleCount');
+    
+    if (!filterInput || !clearButton || !moduleCountSpan) return;
+    
+    function updateModuleCount() {
+        const allCards = document.querySelectorAll('.module-card-wrapper');
+        const visibleCards = document.querySelectorAll('.module-card-wrapper:not([style*="display: none"])');
+        moduleCountSpan.textContent = `Showing ${visibleCards.length} of ${allCards.length} modules`;
+    }
+    
+    function filterModules() {
+        const searchTerm = filterInput.value.toLowerCase().trim();
+        const moduleCards = document.querySelectorAll('.module-card-wrapper');
+        
+        moduleCards.forEach(card => {
+            const title = card.getAttribute('data-title') || '';
+            const description = card.getAttribute('data-description') || '';
+            const course = card.getAttribute('data-course') || '';
+            
+            const matches = title.includes(searchTerm) || 
+                          description.includes(searchTerm) || 
+                          course.includes(searchTerm);
+            
+            if (matches || searchTerm === '') {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        
+        // Hide/show course section headers based on visible modules
+        const courseSections = document.querySelectorAll('.course-section');
+        courseSections.forEach(section => {
+            const visibleCards = section.querySelectorAll('.module-card-wrapper:not([style*="display: none"])');
+            const courseHeader = section.querySelector('.course-header');
+            
+            if (visibleCards.length === 0) {
+                section.style.display = 'none';
+            } else {
+                section.style.display = '';
+            }
+        });
+        
+        updateModuleCount();
+    }
+    
+    // Set up event listeners
+    filterInput.addEventListener('input', filterModules);
+    clearButton.addEventListener('click', function() {
+        filterInput.value = '';
+        filterModules();
+        filterInput.focus();
+    });
+    
+    // Initial count update - check multiple times to catch both static and dynamic cards
+    updateModuleCount(); // Immediate update for static cards
+    setTimeout(updateModuleCount, 500); // Update after dynamic cards start loading
+    setTimeout(updateModuleCount, 2000); // Update after dynamic cards finish loading
+    setTimeout(updateModuleCount, 5000); // Final update for slow connections
+}
+
+// Set up filter when DOM is loaded
+document.addEventListener('DOMContentLoaded', setupModuleFilter);
+
+// Also set up filter if DOM is already loaded
+if (document.readyState !== 'loading') {
+    setupModuleFilter();
 }
 </script>
