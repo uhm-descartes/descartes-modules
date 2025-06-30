@@ -55,7 +55,10 @@ async function drawCourseCards() {
         for (const row of rows) {
             if (row.trim() === '') continue; // Skip empty rows
             
-            const [name, url, fullname, desc] = row.split(',').map(field => field.trim());
+            // More robust CSV parsing to handle commas in quoted fields
+            const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+            const fields = row.split(csvRegex).map(field => field.trim().replace(/^"|"$/g, ''));
+            const [name, url, fullname, desc] = fields;
             
             if (name && url && fullname && desc) {
                 // Generate course card with flexible layout
