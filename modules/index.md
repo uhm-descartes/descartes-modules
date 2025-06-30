@@ -92,13 +92,15 @@ async function fetchAndLogCourseData() {
         for (const row of rows) {
             if (row.trim() === '') continue; // Skip empty rows
             
-            const [course, course_url, course_name, course_description] = row.split(',').map(field => field.trim());
+            // More robust CSV parsing to handle commas in quoted fields
+            const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+            const fields = row.split(csvRegex).map(field => field.trim().replace(/^"|"$/g, ''));
+            const [course, course_url, course_name, course_description] = fields;
             
             if (course && course_url) {
                 // Fetch module-info.js from the course URL
                 try {
-                    const moduleInfoUrl = `${course_url}module-info.js`;
-                    
+                    const moduleInfoUrl = `${course_url}/module-info.js`;
                     const moduleResponse = await fetch(moduleInfoUrl);
                     
                     if (moduleResponse.ok) {
