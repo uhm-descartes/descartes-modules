@@ -16,6 +16,7 @@ morea_experiences:
 morea_assessments:
   - 40-tsa-assessment
 morea_prerequisites:
+  - best-recipe-ever
 morea_type: module
 morea_icon_url: /morea/exploratory-time-series-analysis-R/fig/tsa_logo.png
 morea_labels:
