@@ -13,7 +13,7 @@ morea_experiences:
 morea_assessments:
  - assessment-welcome
 morea_type: module
-morea_icon_url: /morea/descartes-welcome/welcome.png
+morea_icon_url: /morea/welcome/welcome.png
 morea_start_date: "2021-07-12"
 morea_end_date:
 morea_labels:
