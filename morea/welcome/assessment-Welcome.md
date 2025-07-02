@@ -2,7 +2,7 @@
 title: "UHM DESCARTES Welcome"
 published: true
 morea_id: assessment-welcome
-morea_summary: "Did you get the gist of what UHM DESCARTES NSF NRT is all about."
+morea_summary: "Did you get the gist of what UHM DESCARTES NSF NRT is all about?"
 morea_outcomes_assessed:
  - outcome-welcome
 morea_type: assessment

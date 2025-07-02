@@ -8,10 +8,6 @@ morea_start_date: "2021-07-15T23:00"
 morea_labels:
 ---
 
-# CHANGE ME
-
-TBD
-
-## Submission Instructions
+# Greetings
 
 TBD
