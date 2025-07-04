@@ -60,7 +60,7 @@ async function drawCourseCards() {
             const fields = row.split(csvRegex).map(field => field.trim().replace(/^"|"$/g, ''));
             const [name, url, fullname, desc] = fields;
             
-            if (name && url && fullname && desc) {
+            if (name && url) {
                 // Generate course card with flexible layout
                 cardsHTML += `
                     <div class="course-card">
