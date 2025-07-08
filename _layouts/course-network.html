@@ -18,63 +18,74 @@ layout: default
   {{ content }}
 </div>
 
-
 <div id="mynetwork"></div>
 
 <script type="text/javascript">
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const response = await fetch('/descartes-modules/course-sites/descartes-courses.csv');
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-  var addModuleProperties = function(modules) {
-    _.each(modules,
-        function(module) {
-          module['id'] = getID();
-          module['shape'] = 'box';
-          module['label'] = module.course + ": " + module.module;
-          module['level'] = parseInt(module.course.substring(0, 2));
-        });
-    return modules;
-  };
+    const csvText = await response.text();
+    const rows = csvText.trim().split('\n');
 
-  var setModuleProperty = function(modules, property, propertyValue) {
-    _.each(modules,
-        function(module) {
-          module[property] = propertyValue;
-        });
-    return modules;
-  };
+    const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+    const courses2 = [];
+    const courselinks = [];
+    let idMap = {};
+    let currentID = 1;
 
-  var addModuleColor = function(modules, color) {
-    _.each(modules,
-        function (module) {
-          module['color'] = color;
+    const getID = () => currentID++;
+
+    for (const row of rows) {
+      if (row.trim() === '') continue;
+      const fields = row.split(csvRegex).map(f => f.trim().replace(/^"|"$/g, ''));
+      const [name, url, fullname, desc, prerequisites] = fields;
+
+      const id = getID();
+      idMap[name] = id;
+
+      courses2.push({
+        id: id,
+        course: name,
+        module: fullname,
+        label: name + ": " + fullname,
+        title: desc,
+        shape: 'box',
+        level: parseInt(name.substring(0, 2)) || 0
+      });
+
+      if (prerequisites) {
+        prerequisites.split(';').forEach(prereq => {
+          prereq = prereq.trim();
+          if (prereq && idMap[prereq]) {
+            courselinks.push({ from: idMap[prereq], to: id });
+          }
         });
-    return modules;
+      }
+    }
+
+    const coursesDataSet = new vis.DataSet(courses2);
+    const courseLinksDataSet = new vis.DataSet(courselinks);
+
+    const container = document.getElementById('mynetwork');
+
+    const data = {
+      nodes: coursesDataSet,
+      edges: courseLinksDataSet
+    };
+
+    const options = {
+      edges: { arrows: 'to' },
+      layout: { hierarchical: { direction: "LR" } }
+    };
+
+    new vis.Network(container, data, options);
+
+  } catch (error) {
+    console.error('Error loading or processing course data:', error);
+    document.getElementById('mynetwork').innerHTML =
+      '<p class="text-center text-muted">Error loading course graph.</p>';
   }
-
-
-  /////////////////////////////////////////////////
-
-
-  // Add IDs and other standard properties to all modules.
-  setModuleProperty(courses2, 'shape', 'box');
-
-  var coursesDataSet = new vis.DataSet(courses2);
-  var courseLinksDataSet = new vis.DataSet(courselinks);
-
-  // create a network
-  var container = document.getElementById('mynetwork');
-
-  // provide the data in the vis format
-  var data = {
-    nodes: coursesDataSet,
-    edges: courseLinksDataSet
-  };
-
-  var options = {
-    edges: { arrows: 'to'},
-    layout: {hierarchical:{direction: "LR"}}};
-  //options = {};
-
-  // initialize your network!
-  var network = new vis.Network(container, data, options);
+});
 </script>
-

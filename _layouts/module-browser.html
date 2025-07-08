@@ -3,6 +3,7 @@ layout: default
 ---
 
 <!-- Load visualization stuff -->
+ 
 <script type="text/javascript" src="../js/vis.js"></script>
 <script type="text/javascript" src="../js/underscore.js"></script>
 <script type="text/javascript" src="../js/palette.js"></script>
@@ -16,12 +17,49 @@ layout: default
 </style>
 
 <!-- Load course info -->
-<script type="text/javascript" src="//dport96.github.io/ITM683/module-info.js"></script>
-<script type="text/javascript" src="//dport96.github.io/BUS619/module-info.js"></script>
-<script type="text/javascript" src="//descartes.manoa.hawaii.edu/MGT650/module-info.js"></script>
-<script  type="text/javascript" src="//descartes.manoa.hawaii.edu/ee445/module-info.js"></script>
+
+<script>  // Dynamically import a module
+function loadScript(url) {
+  const script = document.createElement('script');
+  script.src = url;
+  script.type = 'text/javascript';
+  script.onload = () => console.log(`${url} loaded successfully.`);
+  script.onerror = () => console.error(`Failed to load script: ${url}`);
+  document.head.appendChild(script);
+}
+
+// Example usage
+loadScript('https://dport96.github.io/ITM683/module-info.js');
+// loadScript('https://uhm-itm.github.io/BUS619/module-info.js');
+// loadScript('https://descartes.manoa.hawaii.edu/MGT650/module-info.js');
+// loadScript('https://descartes.manoa.hawaii.edu/ee445/module-info.js');
+</script>
 
 
+
+<!-- <script>
+  try {
+    import('https://uhm-itm.github.io/BUS619/module-info.js');
+  } catch (error) {
+    console.error('Failed to load the module:', error);
+  }
+</script>
+
+<script>
+  try {
+    import('https://descartes.manoa.hawaii.edu/MGT650/module-info.js');
+  } catch (error) {
+    console.error('Failed to load the module:', error);
+  }
+</script>
+
+<script>
+  try {
+    import('https://descartes.manoa.hawaii.edu/ee445/module-info.js');
+  } catch (error) {
+    console.error('Failed to load the module:', error);
+  }
+</script> -->
 
 {% if page.topdiv == 'container' %}
 <div class="container">
@@ -33,7 +71,41 @@ layout: default
 
 <div id="mynetwork"></div>
 
-<script type="text/javascript">
+
+<script>
+// Helper to load scripts sequentially and run callback when all are loaded
+function loadScriptsSequentially(urls, callback) {
+  let i = 0;
+  function next() {
+    if (i < urls.length) {
+      const script = document.createElement('script');
+      script.src = urls[i];
+      script.type = 'text/javascript';
+      script.onload = function() {
+        i++;
+        next();
+      };
+      script.onerror = function() {
+        console.error('Failed to load script: ' + urls[i]);
+        i++;
+        next();
+      };
+      document.head.appendChild(script);
+    } else {
+      callback();
+    }
+  }
+  next();
+}
+
+const courseScriptUrls = [
+  'https://dport96.github.io/ITM683/module-info.js'//,
+  // 'https://uhm-itm.github.io/BUS619/module-info.js',
+  // 'https://descartes.manoa.hawaii.edu/MGT650/module-info.js',
+  // 'https://descartes.manoa.hawaii.edu/ee445/module-info.js'
+];
+
+loadScriptsSequentially(courseScriptUrls, function() {
   var numCourses = 4; // update this each time you add a new course.
   var courseColors = palette('tol', numCourses);
   var moduleNodes = [];
@@ -41,8 +113,6 @@ layout: default
 
   var processCourse = function(course, nodes, edges, color) {
     var numModules = course.modules.length;
-    // Define a node for each module, and chain the modules of a course together.
-    // Use a for loop so we can chain all but the last module to the next one.
     for (i = 0; i < numModules; i++) {
       var node = {};
       var module = course.modules[i];
@@ -59,49 +129,34 @@ layout: default
         edges.push(edge);
       }
     }
-    // Define an edge for each prerequisite.
-    _.each(course.prerequisites,
-        function (prereq) {
-          var edge = {};
-          edge.from = prereq.moduleUrl;
-          edge.to = prereq.prerequisiteUrl;
-          edges.push(edge);
-        });
-  }
+    _.each(course.prerequisites, function (prereq) {
+      var edge = {};
+      edge.from = prereq.moduleUrl;
+      edge.to = prereq.prerequisiteUrl;
+      edges.push(edge);
+    });
+  };
 
   processCourse(itm683, moduleNodes, moduleEdges, courseColors[0]);
-  processCourse(bus619, moduleNodes, moduleEdges, courseColors[1]);
-  processCourse(mgt650, moduleNodes, moduleEdges, courseColors[2]);
-  processCourse(ee445, moduleNodes, moduleEdges, courseColors[3]);
+  // processCourse(bus619, moduleNodes, moduleEdges, courseColors[1]);
+  // processCourse(mgt650, moduleNodes, moduleEdges, courseColors[2]);
+  // processCourse(ee445, moduleNodes, moduleEdges, courseColors[3]);
 
-
-  // create a network
   var container = document.getElementById('mynetwork');
-
-  // provide the data in the vis format
   var data = {
     nodes: moduleNodes,
     edges: moduleEdges
   };
-
   var options = {
-    // Layout is deterministic.
     layout: { randomSeed: 2},
-    nodes: {
-      font: {
-        color: 'white'
-      }
-    },
+    nodes: { font: { color: 'white' } },
     physics: {stabilization: true}
   };
-
-  // initialize your network!
   var network = new vis.Network(container, data, options);
-
   network.on("doubleClick", function (params) {
     if (params['nodes'].length > 0) {
       window.open(params['nodes'][0]);
     }
   });
-
+});
 </script>
