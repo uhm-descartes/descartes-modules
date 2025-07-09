@@ -3,6 +3,7 @@ layout: default
 ---
 
 <!-- Load visualization stuff -->
+
 <script type="text/javascript" src="../js/vis.js"></script>
 <script type="text/javascript" src="../js/underscore.js"></script>
 <script type="text/javascript" src="../js/palette.js"></script>
@@ -15,14 +16,6 @@ layout: default
     }
 </style>
 
-<!-- Load course info -->
-<script type="text/javascript" src="//dport96.github.io/ITM683/module-info.js"></script>
-<script type="text/javascript" src="//dport96.github.io/BUS619/module-info.js"></script>
-<script type="text/javascript" src="//descartes.manoa.hawaii.edu/MGT650/module-info.js"></script>
-<script  type="text/javascript" src="//descartes.manoa.hawaii.edu/ee445/module-info.js"></script>
-
-
-
 {% if page.topdiv == 'container' %}
 <div class="container">
   {{ content }}
@@ -33,75 +26,133 @@ layout: default
 
 <div id="mynetwork"></div>
 
-<script type="text/javascript">
-  var numCourses = 4; // update this each time you add a new course.
-  var courseColors = palette('tol', numCourses);
+<script>
+async function loadModules() {
+  const courses = [];
+  try {
+    const response = await fetch('/descartes-modules/course-sites/descartes-courses.csv');
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+    const csvText = await response.text();
+    const rows = csvText.trim().split('\n');
+    const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+
+    for (const row of rows) {
+      if (row.trim() === '') continue;
+      const fields = row.split(csvRegex).map(f => f.trim().replace(/^"|"$/g, ''));
+      const [name, url, fullname, desc, prerequisites, repo] = fields;
+      // Ensure the URL points to a JS file
+      let jsUrl = url;
+      if (jsUrl && !jsUrl.endsWith('.js')) {
+        if (!jsUrl.endsWith('/')) jsUrl += '/';
+        jsUrl += 'module-info.js';
+      }
+      courses.push({
+        courseVar: name.toLowerCase().replace(/[^a-z0-9]/g, ''), 
+        url: jsUrl
+      });
+    }
+  } catch (error) {
+    console.error('Error fetching or processing CSV:', error);
+    return;
+  }
+
+  // Helper to load scripts sequentially and return a Promise when all are loaded
+  function loadScriptsSequentially(urls) {
+    return new Promise((resolve) => {
+      let i = 0;
+      function next() {
+        if (i < urls.length) {
+          const script = document.createElement('script');
+          script.src = urls[i];
+          script.type = 'text/javascript';
+          script.onload = function() {
+            i++;
+            next();
+          };
+          script.onerror = function() {
+            console.error('Failed to load script: ' + urls[i]);
+            i++;
+            next();
+          };
+          document.head.appendChild(script);
+        } else {
+          resolve();
+        }
+      }
+      next();
+    });
+  }
+
+  // Load all course scripts, then process the actual course objects
+  await loadScriptsSequentially(courses.map(c => c.url));
+
+  var courseColors = palette('tol', Math.min(courses.length, 12)); // 'tol' supports up to 12 colors
+  while (courseColors.length < courses.length) {
+    courseColors.push(Math.floor(Math.random() * 16777215).toString(16)); // fallback random hex color
+  }
+
   var moduleNodes = [];
   var moduleEdges = [];
 
+  var existingNodeIds = new Set();
+
   var processCourse = function(course, nodes, edges, color) {
     var numModules = course.modules.length;
-    // Define a node for each module, and chain the modules of a course together.
-    // Use a for loop so we can chain all but the last module to the next one.
-    for (i = 0; i < numModules; i++) {
-      var node = {};
+    for (var i = 0; i < numModules; i++) {
       var module = course.modules[i];
-      node.id = module.moduleUrl;
-      node.label = module.course + ": " + module.title;
-      node.color = '#' + color;
-      node.shape = 'box';
-      node.title = module.description;
-      nodes.push(node);
+      if (existingNodeIds.has(module.moduleUrl)) continue; // skip duplicate
+      existingNodeIds.add(module.moduleUrl);
+      nodes.push({
+        id: module.moduleUrl,
+        label: module.course + ": " + module.title,
+        color: '#' + color,
+        shape: 'box',
+        title: module.description
+      });
       if (i < (numModules - 1)) {
-        var edge = {};
-        edge.from = module.moduleUrl;
-        edge.to = course.modules[i + 1].moduleUrl;
-        edges.push(edge);
+        edges.push({
+          from: module.moduleUrl,
+          to: course.modules[i + 1].moduleUrl
+        });
       }
     }
-    // Define an edge for each prerequisite.
-    _.each(course.prerequisites,
-        function (prereq) {
-          var edge = {};
-          edge.from = prereq.moduleUrl;
-          edge.to = prereq.prerequisiteUrl;
-          edges.push(edge);
-        });
-  }
-
-  processCourse(itm683, moduleNodes, moduleEdges, courseColors[0]);
-  processCourse(bus619, moduleNodes, moduleEdges, courseColors[1]);
-  processCourse(mgt650, moduleNodes, moduleEdges, courseColors[2]);
-  processCourse(ee445, moduleNodes, moduleEdges, courseColors[3]);
+    _.each(course.prerequisites, function (prereq) {
+      edges.push({
+        from: prereq.moduleUrl,
+        to: prereq.prerequisiteUrl
+      });
+    });
+  };
 
 
-  // create a network
+  // Now, for each course, get the global variable and process it
+  courses.forEach(function (course, index) {
+    var courseObj = window[course.courseVar];
+    if (courseObj && courseObj.modules) {
+      var color = courseColors[index];
+      processCourse(courseObj, moduleNodes, moduleEdges, color);
+    } else {
+      console.warn('Course object not found or missing modules:', course.courseVar);
+    }
+  });
+
   var container = document.getElementById('mynetwork');
-
-  // provide the data in the vis format
   var data = {
     nodes: moduleNodes,
     edges: moduleEdges
   };
-
   var options = {
-    // Layout is deterministic.
     layout: { randomSeed: 2},
-    nodes: {
-      font: {
-        color: 'white'
-      }
-    },
+    nodes: { font: { color: 'white' } },
     physics: {stabilization: true}
   };
-
-  // initialize your network!
   var network = new vis.Network(container, data, options);
-
   network.on("doubleClick", function (params) {
     if (params['nodes'].length > 0) {
       window.open(params['nodes'][0]);
     }
   });
-
+}
+loadModules();
 </script>
