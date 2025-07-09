@@ -7,7 +7,9 @@ layout: default
 <script type="text/javascript" src="../js/vis.js"></script>
 <script type="text/javascript" src="../js/underscore.js"></script>
 <script type="text/javascript" src="../js/palette.js"></script>
+<script type="text/javascript" src="../js/courses.js"></script>
 <link href="../css/vis.css" rel="stylesheet" type="text/css" />
+
 <style type="text/css">
     #mynetwork {
       width: 100%;
@@ -16,131 +18,78 @@ layout: default
     }
 </style>
 
-{% if page.topdiv == 'container' %}
 <div class="container">
   {{ content }}
 </div>
-{% else %}
-  {{ content }}
-{% endif %}
 
 <div id="mynetwork"></div>
 
 <script>
 async function loadModules() {
-  const courses = [];
-  try {
-    const response = await fetch('/descartes-modules/course-sites/descartes-courses.csv');
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-    const csvText = await response.text();
-    const rows = csvText.trim().split('\n');
-    const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
-
-    for (const row of rows) {
-      if (row.trim() === '') continue;
-      const fields = row.split(csvRegex).map(f => f.trim().replace(/^"|"$/g, ''));
-      const [name, url, fullname, desc, prerequisites, repo] = fields;
-      // Ensure the URL points to a JS file
-      let jsUrl = url;
-      if (jsUrl && !jsUrl.endsWith('.js')) {
-        if (!jsUrl.endsWith('/')) jsUrl += '/';
-        jsUrl += 'module-info.js';
-      }
-      courses.push({
-        courseVar: name.toLowerCase().replace(/[^a-z0-9]/g, ''), 
-        url: jsUrl
-      });
-    }
-  } catch (error) {
-    console.error('Error fetching or processing CSV:', error);
+  // Ensure courses are loaded first
+  const courses = await loadCoursesCSV('/descartes-modules/course-sites/descartes-courses.csv');
+  if (courses === false) {
+    console.error('Failed to load courses.');
     return;
   }
 
-  // Helper to load scripts sequentially and return a Promise when all are loaded
-  function loadScriptsSequentially(urls) {
-    return new Promise((resolve) => {
-      let i = 0;
-      function next() {
-        if (i < urls.length) {
-          const script = document.createElement('script');
-          script.src = urls[i];
-          script.type = 'text/javascript';
-          script.onload = function() {
-            i++;
-            next();
-          };
-          script.onerror = function() {
-            console.error('Failed to load script: ' + urls[i]);
-            i++;
-            next();
-          };
-          document.head.appendChild(script);
-        } else {
-          resolve();
-        }
-      }
-      next();
-    });
-  }
+  var courseColors = generateColorPalette(courses.length);
 
-  // Load all course scripts, then process the actual course objects
-  await loadScriptsSequentially(courses.map(c => c.url));
+  var nodes = [];
+  var edges = [];
 
-  var courseColors = palette('tol', Math.min(courses.length, 12)); // 'tol' supports up to 12 colors
-  while (courseColors.length < courses.length) {
-    courseColors.push(Math.floor(Math.random() * 16777215).toString(16)); // fallback random hex color
-  }
+  var existing = new Set();
 
-  var moduleNodes = [];
-  var moduleEdges = [];
-
-  var existingNodeIds = new Set();
-
-  var processCourse = function(course, nodes, edges, color) {
-    var numModules = course.modules.length;
-    for (var i = 0; i < numModules; i++) {
-      var module = course.modules[i];
-      if (existingNodeIds.has(module.moduleUrl)) continue; // skip duplicate
-      existingNodeIds.add(module.moduleUrl);
+  var processModules = function(course, nodes, edges, color) {
+    for (var i = 0; i < course.moduleInfo.modules.length; i++) {
+      var module = course.moduleInfo.modules[i];
+      var moduleUrl = generateModuleUrl(course.url, module.moduleUrl);
+      if (existing.has(moduleUrl)) continue; // skip duplicate
+      existing.add(moduleUrl);
       nodes.push({
-        id: module.moduleUrl,
-        label: module.course + ": " + module.title,
+        id: moduleUrl,
+        label: generateModuleLabel(course.name, module.title),
         color: '#' + color,
         shape: 'box',
         title: module.description
       });
-      if (i < (numModules - 1)) {
+      if (i < (course.moduleInfo.modules.length - 1)) {
         edges.push({
-          from: module.moduleUrl,
-          to: course.modules[i + 1].moduleUrl
+          from: moduleUrl,
+          to: generateModuleUrl(course.url, course.moduleInfo.modules[i + 1].moduleUrl),
+          arrows: 'to',
+          color: '#' + color
         });
       }
     }
-    _.each(course.prerequisites, function (prereq) {
+    _.each(course.moduleInfo.prerequisites, function (prereq) {
       edges.push({
         from: prereq.moduleUrl,
-        to: prereq.prerequisiteUrl
+        to: prereq.prerequisiteUrl,
+        arrows: 'from',
+        color: '#' + color
       });
     });
   };
 
-
-  // Now, for each course, get the global variable and process it
-  courses.forEach(function (course, index) {
-    var courseObj = window[course.courseVar];
-    if (courseObj && courseObj.modules) {
-      var color = courseColors[index];
-      processCourse(courseObj, moduleNodes, moduleEdges, color);
-    } else {
-      console.warn('Course object not found or missing modules:', course.courseVar);
+  for (const course of courses) {
+    let success = await loadCourseModuleInfo(course);
+    if (!success) {
+      console.warn(`Failed to load module info for course: ${course.id}`);
+      continue;
     }
-  });
+    var color = courseColors[courses.indexOf(course)];
+    if (course.moduleInfo && course.moduleInfo.modules && course.moduleInfo.prerequisites) {
+      processModules(course, nodes, edges, color);
+    } else {
+      console.warn(`No module info found for course: ${course.id}`);
+    }
+  }
 
   var container = document.getElementById('mynetwork');
   var data = {
-    nodes: moduleNodes,
-    edges: moduleEdges
+    nodes: nodes,
+    edges: edges
   };
   var options = {
     layout: { randomSeed: 2},
@@ -150,7 +99,7 @@ async function loadModules() {
   var network = new vis.Network(container, data, options);
   network.on("doubleClick", function (params) {
     if (params['nodes'].length > 0) {
-      window.open(params['nodes'][0]);
+      window.open(params['nodes'][0], '_blank');
     }
   });
 }

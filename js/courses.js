@@ -18,6 +18,34 @@ function generateCourseTitle(course) {
 }
 
 /**
+ * Generate a label for a module based on its course ID and title.
+ * @param {string} courseId - The ID of the course.
+ * @param {string} moduleTitle - The title of the module.
+ * @returns {string} - The generated module label.
+ */
+function generateModuleLabel(courseName, moduleTitle) {
+    return courseName + ': ' + moduleTitle;
+}
+
+function generateModuleUrl(courseUrl, moduleUrl) {
+    var courseUrlEnding = courseUrl.split('/').pop();
+    console.log('Course URL:', courseUrl);
+    console.log('Module URL:', moduleUrl);
+    console.log('Course URL ending:', courseUrlEnding);
+    // Check if the module URL starts with the course URL ending
+
+    if (moduleUrl.startsWith('/' + courseUrlEnding + '/')) {
+        var newCourseUrl = courseUrl.replace('/' + courseUrlEnding, '');
+        console.log('New Course URL:', newCourseUrl);
+        // Generate a URL for the module based on its course URL and module URL
+        var newUrl = new URL(moduleUrl, newCourseUrl).toString();
+        console.log('Generated URL:', newUrl);
+        return newUrl;
+    }
+    return new URL(moduleUrl, courseUrl).toString();
+}
+
+/**
  * Generate a color palette with the specified number of colors.
  * @param {*} count The number of colors to generate.
  * @returns {Array} - An array of color hex codes.
@@ -153,21 +181,23 @@ async function loadCourseModuleInfo(course) {
     // Fetch the module info script for the course
     try {
         // Fetch the module info script from the course's moduleInfoUrl
+        console.log(`Loading module info for course: ${course.name} from ${course.moduleInfoUrl}`);
         const response = await fetch(course.moduleInfoUrl);
         // Check if the response is ok (status in the range 200-299)
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         // Read the response text as a script
         const scriptText = await response.text();
+        // Get the first line of the script
+        const firstLine = scriptText.split('\n')[0].trim();
+        console.log('First line of module info script:', firstLine);
         // Evaluate the script to define the course module
-        eval(scriptText);
-        // Get the course module information
-        let courseModInfo = window[course.id];
-        // Check if the module has the expected properties
-        if (!courseModInfo || !courseModInfo.modules || !courseModInfo.prerequisites) {
-            throw new Error('Invalid course module information');
+        var results = eval?.(scriptText);
+        // Check if the results is an object and has the expected properties
+        if (typeof results !== 'object' || !results || !results.modules || !results.prerequisites) {
+            throw new Error('Invalid module info script format');
         }
         // Add the module information to the course object
-        course.moduleInfo = courseModInfo;
+        course.moduleInfo = results;
         // Ensure the modules array is sorted by sort_order
         course.moduleInfo.modules.sort((a, b) => a.sort_order - b.sort_order);
         // Ensure the prerequisites array is sorted by sort_order

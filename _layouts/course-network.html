@@ -44,18 +44,17 @@ async function loadCourses() {
     if (existing.has(course.id)) return; // skip duplicate
     existing.add(course.id);
     nodes.push({
-      id: course.id,
+      id: course.url,
       label: generateCourseTitle(course),
       color: '#' + color,
       shape: 'box',
-      title: course.description,
-      url: course.url
+      title: course.description
     });
     if (course.prerequisites && course.prerequisites.length > 0) {
       course.prerequisites.forEach(function (prerequisite) {
         edges.push({
-          from: prerequisite,
-          to: course.id,
+          from: course.id,
+          to: generateCourseId(prerequisite),
           arrows: 'to',
           color: { color: '#' + color }
         });
@@ -64,10 +63,10 @@ async function loadCourses() {
   }
 
   // Now, for each course, get the global variable and process it
-  courses.forEach(function (course) {
+  for (const course of courses) {
     var color = courseColors[courses.indexOf(course)];
     processCourse(course, nodes, edges, color);
-  });
+  }
 
   var container = document.getElementById('mynetwork');
   var data = {
@@ -84,7 +83,7 @@ async function loadCourses() {
     if (params['nodes'].length > 0) {
       console.log('Opening course:', params['nodes'][0]);
       // Open the course URL in a new tab
-      window.open(courses.find(c => c.id == params['nodes'][0]).url, '_blank');
+      window.open(params['nodes'][0], '_blank');
     }
   });
 }
