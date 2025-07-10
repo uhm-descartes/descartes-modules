@@ -2,6 +2,8 @@
 layout: default
 title: Modules
 ---
+<script type="text/javascript" src="../js/courses.js"></script>
+
 {% include breadcrumb-2.html %}
 
 <div class="container">
@@ -71,176 +73,75 @@ title: Modules
 </div>
 
 <script>
-// Load course data when page loads
-
 // Function to fetch CSV and load course modules
 async function fetchAndLogCourseData() {
     try {
-        const url = '/descartes-modules/course-sites/descartes-courses.csv';
-        
-        // Fetch the CSV file from the current server
-        const response = await fetch(url);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`);
+        // Ensure courses are loaded first
+        const courses = await loadCoursesCSV('/descartes-modules/course-sites/descartes-courses.csv');
+        if (courses === false) {
+            console.error('Failed to load courses.');
+            return;
         }
         
-        const csvText = await response.text();
-        const rows = csvText.trim().split('\n');
-        
-        // Loop through the rows and process each course
-        for (const row of rows) {
-            if (row.trim() === '') continue; // Skip empty rows
-            
-            // More robust CSV parsing to handle commas in quoted fields
-            const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
-            const fields = row.split(csvRegex).map(field => field.trim().replace(/^"|"$/g, ''));
-            const [course, course_url, course_name, course_description] = fields;
-            
-            if (course && course_url) {
-                // Fetch module-info.js from the course URL
-                try {
-                    const moduleInfoUrl = `${course_url}/module-info.js`;
-                    const moduleResponse = await fetch(moduleInfoUrl);
-                    
-                    if (moduleResponse.ok) {
-                        const moduleInfoContent = await moduleResponse.text();
-                        
-                        // Parse the module-info.js content to extract modules array using regex
-                        try {
-                            const modulesMatch = moduleInfoContent.match(/modules:\s*\[([\s\S]*?)\]/);
-                            if (modulesMatch) {
-                                const modulesArrayContent = modulesMatch[1];
-                                
-                                // Extract individual module objects using regex
-                                const moduleObjectMatches = modulesArrayContent.match(/\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/g);
-                                
-                                if (moduleObjectMatches) {
-                                    
-                                    // Parse each module object
-                                    const moduleObjects = [];
-                                    let moduleCardsHTML = '';
-                                    
-                                    moduleObjectMatches.forEach((moduleStr, index) => {
-                                        try {
-                                            // Convert JavaScript object format to JSON
-                                            let jsonModuleStr = moduleStr
-                                                .replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":')  // Quote property names
-                                                .replace(/:\s*"([^"]*)"([^,}\]]*)/g, ': "$1$2"')  // Handle quoted strings
-                                                .replace(/:\s*'([^']*)'/g, ': "$1"')  // Convert single quotes to double quotes
-                                                .replace(/,(\s*[}\]])/g, '$1');  // Remove trailing commas
-                                            
-                                            const moduleObj = JSON.parse(jsonModuleStr);
-                                            moduleObjects.push(moduleObj);
-                                            
-                                            // Create module card HTML
-                                            const moduleUrl = moduleObj.moduleUrl || '#';
-                                            let fullModuleUrl;
-                                            
-                                            if (moduleUrl.startsWith('http')) {
-                                                // Absolute URL, use as-is
-                                                fullModuleUrl = moduleUrl;
-                                            } else {
-                                                // Relative URL, combine with course_url
-                                                let baseCourseUrl = course_url.endsWith('/') ? course_url.slice(0, -1) : course_url;
-                                                let relativeModuleUrl = moduleUrl.startsWith('/') ? moduleUrl : '/' + moduleUrl;
-                                                
-                                                // Check for overlapping paths
-                                                const courseUrlParts = baseCourseUrl.split('/');
-                                                const moduleUrlParts = relativeModuleUrl.split('/').filter(part => part !== '');
-                                                
-                                                // Find if the last part of course URL matches the first part of module URL
-                                                const lastCourseUrlPart = courseUrlParts[courseUrlParts.length - 1];
-                                                const firstModuleUrlPart = moduleUrlParts[0];
-                                                
-                                                if (lastCourseUrlPart && firstModuleUrlPart && lastCourseUrlPart === firstModuleUrlPart) {
-                                                    // Remove the overlapping part from module URL
-                                                    const cleanModuleUrlParts = moduleUrlParts.slice(1);
-                                                    relativeModuleUrl = cleanModuleUrlParts.length > 0 ? '/' + cleanModuleUrlParts.join('/') : '';
-                                                }
-                                                
-                                                fullModuleUrl = baseCourseUrl + relativeModuleUrl;
-                                            }
-                                            
-                                            const moduleTitle = moduleObj.title || 'Untitled Module';
-                                            const moduleDescription = moduleObj.description || 'No description available';
-                                            const moduleCourse = moduleObj.course || course;
-                                            const moduleLabel = moduleObj.descartesModule ? 'DESCARTES module' : 'Module';
-                                            
-                                            moduleCardsHTML += `
-                                                <div class="col-md-6 col-lg-4 module-card-wrapper" style="padding-bottom: 20px" 
-                                                     data-title="${moduleTitle.toLowerCase()}" 
-                                                     data-description="${moduleDescription.toLowerCase()}" 
-                                                     data-course="${moduleCourse.toLowerCase()}">
-                                                    <div class="card h-100">
-                                                        <div class="card-body">
-                                                            <h3 class="card-title">${moduleTitle}</h3>
-                                                            <p>${moduleDescription}</p>
-                                                            <p>
-                                                                <span class="badge bg-primary">${moduleCourse}</span>
-                                                                <span class="badge bg-primary">${moduleLabel}</span>
-                                                            </p>
-                                                        </div>
-                                                        <a href="${fullModuleUrl}" class="stretched-link"></a>
-                                                    </div>
-                                                </div>`;
-                                            
-                                        } catch (parseError) {
-                                            // Skip modules that can't be parsed
-                                        }
-                                    });
-                                    
-                                    // Insert module cards into the DOM
-                                    if (moduleCardsHTML) {
-                                        const courseCardsDiv = document.getElementById('course_cards_div');
-                                        if (courseCardsDiv) {
-                                            courseCardsDiv.innerHTML += `
-                                                <div class="row course-section" data-course="${course.toLowerCase()}">
-                                                    <div class="col-12">
-                                                        <h3 class="mt-4 mb-3 course-header">Modules from ${course}</h3>
-                                                    </div>
-                                                    ${moduleCardsHTML}
-                                                </div>`;
-                                        }
-                                    }
-                                    
-                                } else {
-                                    // No module objects found in array
-                                }
-                            } else {
-                                // Could not find modules array with regex
-                            }
-                        } catch (regexError) {
-                            // Regex parsing failed
-                        }
-                    } else {
-                        // Failed to fetch module-info.js
-                    }
-                } catch (moduleError) {
-                    // Error fetching module-info.js
+        var moduleCardsHTML = '';
+
+        // Loop through the courese and process each course
+        for (const course of courses) {
+            if (!course.name || !course.url || !course.moduleInfoUrl) {
+                console.error(`Course is not properly defined: ${course}`);
+            }
+            const success = await loadCourseModuleInfo(course);
+            if (success === false) {
+                console.error(`Failed to load module info for course: ${course.name}`);
+                continue;
+            }
+            if (!course.moduleInfo || !course.moduleInfo.modules) {
+                console.error(`No Modules for course: ${course.name}`);
+                continue;
+            }
+            for (const idx in course.moduleInfo.modules) {
+                const mod = course.moduleInfo.modules[idx];
+                console.log(`Module ${mod}`)
+                const moduleUrl = generateModuleUrl(course.url, mod.moduleUrl);
+                moduleCardsHTML += `
+                    <div class="col-md-6 col-lg-4 module-card-wrapper" style="padding-bottom: 20px" 
+                            data-title="${mod.title.toLowerCase()}" 
+                            data-description="${mod.description.toLowerCase()}" 
+                            data-course="${mod.course.toLowerCase()}">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h3 class="card-title">${mod.title}</h3>
+                                <p>${mod.description}</p>
+                                <p>
+                                    <span class="badge bg-primary">${mod.course}</span>
+                                    <span class="badge bg-primary">${mod.label}</span>
+                                </p>
+                            </div>
+                            <a href="${moduleUrl}" class="stretched-link"></a>
+                        </div>
+                    </div>`;
+            }
+            // Insert module cards into the DOM
+            if (moduleCardsHTML && moduleCardsHTML.trim() != '') {
+                const courseCardsDiv = document.getElementById('course_cards_div');
+                if (courseCardsDiv) {
+                    courseCardsDiv.innerHTML += `
+                        <div class="row course-section" data-course="${course.name.toLowerCase()}">
+                            <div class="col-12">
+                                <h3 class="mt-4 mb-3 course-header">Modules from ${course.name}: ${course.title}</h3>
+                            </div>
+                            ${moduleCardsHTML}
+                        </div>`;
                 }
-                
-                // Separator comment for next course processing
             }
         }
-        
     } catch (error) {
-        // Error fetching course data
+        console.error('Error loading course data:', error);
+        document.getElementById('course_cards_div').innerHTML = 
+            '<p class="text-center text-muted">Error loading course data. Please try again later.</p>';
     }
 }
-
-// Call the function when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    fetchAndLogCourseData();
-});
-
-// Also try calling it immediately in case DOM is already loaded
-if (document.readyState === 'loading') {
-    // Document still loading, waiting for DOMContentLoaded
-} else {
-    // Document already loaded, calling function immediately
-    fetchAndLogCourseData();
-}
+fetchAndLogCourseData();
 
 // Progressive filter functionality
 function setupModuleFilter() {
@@ -299,19 +200,6 @@ function setupModuleFilter() {
         filterModules();
         filterInput.focus();
     });
-    
-    // Initial count update - check multiple times to catch both static and dynamic cards
-    updateModuleCount(); // Immediate update for static cards
-    setTimeout(updateModuleCount, 500); // Update after dynamic cards start loading
-    setTimeout(updateModuleCount, 2000); // Update after dynamic cards finish loading
-    setTimeout(updateModuleCount, 5000); // Final update for slow connections
 }
-
-// Set up filter when DOM is loaded
-document.addEventListener('DOMContentLoaded', setupModuleFilter);
-
-// Also set up filter if DOM is already loaded
-if (document.readyState !== 'loading') {
-    setupModuleFilter();
-}
+setupModuleFilter();
 </script>

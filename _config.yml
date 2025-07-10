@@ -18,7 +18,7 @@ logger_factory:
   Morea: error
 
 # MOREA PORTAL: The following fields are only needed if this site is part of a "Morea Portal".
-morea_course: DES 101
+morea_course: "DES 101"
 morea_course_name: "UHM DESCARTES Modules"
 morea_description: "Courses and Modules for the UHM DESCARTES program."
 # morea_prerequisites: ""

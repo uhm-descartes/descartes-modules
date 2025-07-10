@@ -28,18 +28,15 @@ function generateModuleLabel(courseName, moduleTitle) {
 }
 
 function generateModuleUrl(courseUrl, moduleUrl) {
+    if (!courseUrl || !moduleUrl) {
+        console.error('Invalid course URL or module URL:', courseUrl, moduleUrl);
+        return '#'; // Return a placeholder URL if either is invalid
+    }
     var courseUrlEnding = courseUrl.split('/').pop();
-    console.log('Course URL:', courseUrl);
-    console.log('Module URL:', moduleUrl);
-    console.log('Course URL ending:', courseUrlEnding);
-    // Check if the module URL starts with the course URL ending
-
     if (moduleUrl.startsWith('/' + courseUrlEnding + '/')) {
         var newCourseUrl = courseUrl.replace('/' + courseUrlEnding, '');
-        console.log('New Course URL:', newCourseUrl);
         // Generate a URL for the module based on its course URL and module URL
         var newUrl = new URL(moduleUrl, newCourseUrl).toString();
-        console.log('Generated URL:', newUrl);
         return newUrl;
     }
     return new URL(moduleUrl, courseUrl).toString();
@@ -94,7 +91,7 @@ async function loadCoursesCSV(csvPath) {
     // Regular expression to split CSV fields, handling quoted fields
     const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
     // Array to hold the course objects
-    const courses = [];
+    const courses = new Array();
     const courseIds = new Set(); // Set to track unique course IDs
     // The Text of the CSV file - initially empty
     let csvText = "";
@@ -181,15 +178,11 @@ async function loadCourseModuleInfo(course) {
     // Fetch the module info script for the course
     try {
         // Fetch the module info script from the course's moduleInfoUrl
-        console.log(`Loading module info for course: ${course.name} from ${course.moduleInfoUrl}`);
         const response = await fetch(course.moduleInfoUrl);
         // Check if the response is ok (status in the range 200-299)
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         // Read the response text as a script
         const scriptText = await response.text();
-        // Get the first line of the script
-        const firstLine = scriptText.split('\n')[0].trim();
-        console.log('First line of module info script:', firstLine);
         // Evaluate the script to define the course module
         var results = eval?.(scriptText);
         // Check if the results is an object and has the expected properties
