@@ -3,6 +3,8 @@ layout: default
 title: Course Sites
 topdiv: container
 ---
+<script type="text/javascript" src="../js/courses.js"></script>
+
 {% include breadcrumb-2.html %}
 
 # Course Sites
@@ -39,37 +41,28 @@ document.addEventListener('DOMContentLoaded', drawCourseCards);
 
 async function drawCourseCards() {
     try {
-        // Fetch the CSV file from the current server
-        const response = await fetch('/descartes-modules/course-sites/descartes-courses.csv');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        // Ensure courses are loaded first
+        const courses = await loadCoursesCSV('/descartes-modules/course-sites/descartes-courses.csv');
+        if (courses === false) {
+            console.error('Failed to load courses.');
+            return;
         }
-        
-        const csvText = await response.text();
-        const rows = csvText.trim().split('\n');
         
         const div = document.getElementById('course_cards_div');
         let cardsHTML = '';
 
         // Process each row (name, url, fullname, desc)
-        for (const row of rows) {
-            if (row.trim() === '') continue; // Skip empty rows
-            
-            // More robust CSV parsing to handle commas in quoted fields
-            const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
-            const fields = row.split(csvRegex).map(field => field.trim().replace(/^"|"$/g, ''));
-            const [name, url, fullname, desc] = fields;
-            
-            if (name && url) {
+        for (const course of courses) {            
+            if (course.name && course.url) {
                 // Generate course card with flexible layout
                 cardsHTML += `
                     <div class="course-card">
                         <div class="card h-100">
                             <div class="card-body">
-                                <a href="${url}" class="text-decoration-none">
-                                    <h4 class="text-center mb-0">${name}</h4>
-                                    <h3 class="text-center mt-2">${fullname}</h3>
-                                    <p class="card-text">${desc}</p>
+                                <a href="${course.url}" class="text-decoration-none">
+                                    <h4 class="text-center mb-0">${course.name}</h4>
+                                    <h3 class="text-center mt-2">${course.title}</h3>
+                                    <p class="card-text">${course.description}</p>
                                 </a>
                             </div>
                         </div>
