@@ -88,6 +88,9 @@ module Morea
         if @config['morea_domain'].end_with?("/")
           @config['morea_domain'].chop!
         end
+      end      
+      if (@config['course_sections'] == nil)
+        @config['course_sections'] = []
       end
       # Set the navbar background depending on the theme.
       if ["darkly"].include? @config['morea_theme'].to_s
@@ -274,19 +277,35 @@ module Morea
           if page.data['morea_labels'] == nil
             page.data['morea_labels'] = []
           end
-          page.data['morea_labels'] << "#{(Time.parse(page.data['morea_start_date'])).strftime("%d %b %I:%M %p")}"
+          if page.data['morea_start_date'].is_a?(Hash)
+            # Add a date label for each section.
+            page.data['morea_start_date'].each do |section, date|
+              page.data['morea_labels'] << "#{section}: #{(Time.parse(date)).strftime("%d %b %I:%M %p")}"
+            end
+          else
+            # Add a single date label when there are no multiple sections for backward compatibility.
+            page.data['morea_labels'] << "#{(Time.parse(page.data['morea_start_date'])).strftime("%d %b %I:%M %p")}"
+          end
         end
       end
       site.config['morea_module_pages'].each do |page|
         if page.data['morea_start_date']
-          page.data['morea_start_date_string'] = "#{(Time.parse(page.data['morea_start_date'])).strftime("%a, %b %-d")}"
-        end
-        if page.data['morea_end_date']
-          page.data['morea_end_date_string'] = "#{(Time.parse(page.data['morea_end_date'])).strftime("%a, %b %-d")}"
+        # Collect start dates and end dates for multiple sections. 
+          if (page.data['morea_start_date'].is_a?(Hash))
+            string_array = page.data['morea_start_date'].map { |section, date| 
+              "#{section}: #{(Time.parse(date)).strftime("%a, %b %-d")}#{page.data['morea_end_date'].has_key?(section)  ? " - #{(Time.parse(page.data['morea_end_date'][section])).strftime("%a, %b %-d")}" : ""}"
+            }
+            page.data['morea_start_end_date_string'] = string_array.join("<br>")
+        # No multiple sections, so just define morea_start_end_date_string
+          else
+            page.data['morea_start_date_string'] = "#{(Time.parse(page.data['morea_start_date'])).strftime("%a, %b %-d")}"
+            if page.data['morea_end_date']
+              page.data['morea_end_date_string'] = "#{(Time.parse(page.data['morea_end_date'])).strftime("%a, %b %-d")}"
+            end
+          end
         end
       end
     end
-
 
     def print_morea_problems(site)
       site.config['morea_page_table'].each do |morea_id, morea_page|
@@ -658,7 +677,7 @@ module Morea
       @schedule_file_path= @schedule_file_dir + '/schedule/' + @schedule_file_name
     end
 
-    # Write a file declaring a global variable called moreaEventData containing an array of calendar events.
+    # Write a file declaring a global variable called moreaEventData containing an array of calendar events. 
     # Write it directly to the _site directory in order to avoid infinite regeneration
     def write_schedule_info_file
       schedule_file_contents = 'moreaEventData = '
@@ -674,12 +693,34 @@ module Morea
       events = "["
       site.config['morea_page_table'].each do |morea_id, morea_page|
         if morea_page.data.has_key?('morea_start_date')
-          event = "\n  {title: #{morea_page.data['title'].inspect}, url: #{get_event_url(morea_page, site).inspect}, start: #{morea_page.data['morea_start_date'].inspect}"
-          if morea_page.data.has_key?('morea_end_date')
-            event += ", end: #{morea_page.data['morea_end_date'].inspect}"
+          # avoid adding events with no start date
+          if(morea_page.data['morea_start_date'].nil?)
+            next
           end
-          event += "},"
-          events += event
+          if (morea_page.data['morea_start_date'].is_a?(Hash))
+            start_dates = morea_page.data['morea_start_date']
+            if morea_page.data.has_key?('morea_end_date')
+              end_dates = morea_page.data['morea_end_date']
+            end
+          else
+            start_dates = { "none" => morea_page.data['morea_start_date'] }
+            if morea_page.data.has_key?('morea_end_date')
+              end_dates = { "none" => morea_page.data['morea_end_date'] }
+            end
+          end
+          # Create an event each for section in morea_start_date. The section is used to select the events to display on the calendar. 
+          start_dates.each do |section, date|
+            if !site.config['course_sections'].include?(section) && section != "none"
+              site.config['course_sections'] << section
+              puts "\e[31m-- WARNING for morea_id: #{morea_page.data['morea_id']}--\nIn morea_start_time section #{section} is not defined in course_sections in _config.yml\e[0m"
+            end
+            event = "\n  {section: \"#{section}\", title: #{morea_page.data['title'].inspect}, url: #{get_event_url(morea_page, site).inspect}, start: #{date.inspect}"
+            if !end_dates.nil? && end_dates.has_key?(section)
+              event += ", end: #{end_dates[section].inspect}"
+            end
+            event += "},"
+            events += event
+          end
         end
       end
       if (events.end_with?(","))
@@ -715,14 +756,14 @@ module Morea
     # Writes out the file module-info.js to the top-level directory.
     # This file contains a variable assignment to a literal object containing module and prereq info.
     def write_module_info_file
-      module_file_contents = @site.config['morea_course'] + ' = {' + "\n"
+      module_file_contents = @site.config['morea_course'].downcase.gsub(/\s+/, "") + ' = {' + "\n"
       module_file_contents += get_module_json_string(@site)
-      module_file_contents += "\n" + '};'
+      module_file_contents += "\n" + "};"
       File.open(@module_file_path, 'w') { |file| file.write(module_file_contents) }
       @site.static_files << Jekyll::StaticFile.new(@site, @site.source, '', @module_file_name)
     end
 
-    # Create the object literal representing and array of module object literals and an array of prereq object literals.
+    # Create the object literal representing an array of module object literals and an array of prereq object literals.
     def get_module_json_string(site)
       json = "modules: ["
       site.config['morea_module_pages'].each do |mod|
