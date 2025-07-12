@@ -183,8 +183,29 @@ async function loadCourseModuleInfo(course) {
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         // Read the response text as a script
         const scriptText = await response.text();
-        // Evaluate the script to define the course module
-        var results = eval?.(scriptText);
+        
+        // Extract the JSON object from the variable assignment
+        // Look for patterns like: variableName = { ... };
+        const assignmentMatch = scriptText.match(/^[a-zA-Z_$][a-zA-Z0-9_$]*\s*=\s*({[\s\S]*?});?\s*$/);
+        
+        let results;
+        if (assignmentMatch) {
+            // Extract just the object literal part and remove any trailing semicolon
+            const objectLiteral = assignmentMatch[1].replace(/;?\s*$/, '');
+            
+            try {
+                // Eval just the object literal (safer than evaling the entire assignment)
+                results = eval?.('(' + objectLiteral + ')');
+            } catch (evalError) {
+                // If object literal eval fails, fall back to full script eval
+                console.warn(`Object literal eval failed for ${course.name}, falling back to full script eval:`, evalError);
+                results = eval?.(scriptText);
+            }
+        } else {
+            // If we can't extract the assignment, fall back to eval
+            console.warn(`Could not extract assignment from ${course.name}, falling back to eval`);
+            results = eval?.(scriptText);
+        }
         // Check if the results is an object and has the expected properties
         if (typeof results !== 'object' || !results || !results.modules || !results.prerequisites) {
             throw new Error('Invalid module info script format');
