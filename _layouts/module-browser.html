@@ -25,60 +25,101 @@ layout: default
 <div id="mynetwork"></div>
 
 <script>
+/**
+ * Main function to load and display the module network visualization
+ * This creates a network graph showing modules from different courses and their relationships
+ */
 async function loadModules() {
-  // Ensure courses are loaded first
+  // Load course data from CSV file containing course information
   const courses = await loadCoursesCSV('/descartes-modules/course-sites/descartes-courses.csv');
   if (courses === false) {
     console.error('Failed to load courses.');
     return;
   }
 
+  // Generate distinct colors for each course to differentiate them visually
   var courseColors = generateColorPalette(courses.length);
 
-  var nodes = [];
-  var edges = [];
+  // Arrays to store network visualization data
+  var nodes = [];  // Individual modules that will be displayed as boxes
+  var edges = [];  // Connections between modules showing relationships
 
+  // Set to track already processed modules to avoid duplicates
   var existing = new Set();
 
+  /**
+   * Process modules for a single course and add them to the visualization
+   * @param {Object} course - Course object containing module information
+   * @param {Array} nodes - Array to add module nodes to
+   * @param {Array} edges - Array to add module connections to
+   * @param {string} color - Hex color code for this course's modules
+   */
   var processModules = function(course, nodes, edges, color) {
+    // Process each module in the course sequentially
     for (var i = 0; i < course.moduleInfo.modules.length; i++) {
       var module = course.moduleInfo.modules[i];
+      // Generate a unique URL for this module
       var moduleUrl = generateModuleUrl(course.url, module.moduleUrl);
-      if (existing.has(moduleUrl)) continue; // skip duplicate
+      
+      // Skip if we've already processed this module (avoid duplicates)
+      if (existing.has(moduleUrl)) continue;
       existing.add(moduleUrl);
+      
+      // Create a visual node for this module
       nodes.push({
-        id: moduleUrl,
-        label: generateModuleLabel(course.name, module.title),
-        color: '#' + color,
-        shape: 'box',
-        title: module.description
+        id: moduleUrl,                                          // Unique identifier
+        label: generateModuleLabel(course.name, module.title),  // Display text
+        color: '#' + color,                                     // Background color
+        shape: 'box',                                           // Visual shape
+        title: module.description                               // Tooltip text
       });
+      
+      // Create sequential connections between modules in the same course
+      // This shows the order/progression through course modules
       if (i < (course.moduleInfo.modules.length - 1)) {
         edges.push({
           from: moduleUrl,
           to: generateModuleUrl(course.url, course.moduleInfo.modules[i + 1].moduleUrl),
-          arrows: 'to',
-          color: '#' + color
+          arrows: 'to',              // Arrow pointing to next module
+          color: { color: '#' + color, opacity: 1.0 }, // Solid color for sequence edges
+          width: 1                   // Normal width for sequence connections
         });
       }
     }
-    _.each(course.moduleInfo.prerequisites, function (prereq) {
-      edges.push({
-        from: prereq.moduleUrl,
-        to: prereq.prerequisiteUrl,
-        arrows: 'from',
-        color: '#' + color
+    
+    // Process prerequisite relationships between modules across different courses
+    // This shows dependencies where one module must be completed before another
+    if (course.moduleInfo.prerequisites && course.moduleInfo.prerequisites.length > 0) {
+      console.log(`Processing ${course.moduleInfo.prerequisites.length} prerequisites for ${course.name}`);
+      _.each(course.moduleInfo.prerequisites, function (prereq) {
+        console.log('Adding prerequisite edge:', prereq);
+        edges.push({
+          from: generateModuleUrl(course.url, prereq.prerequisiteUrl), // Source module (prerequisite)
+          to: generateModuleUrl(course.url, prereq.moduleUrl),         // Target module (depends on prerequisite)
+          arrows: 'to',              // Arrow pointing from prerequisite to dependent module
+          color: { color: '#' + color, opacity: 0.7 }, // Slightly transparent to distinguish from sequence edges
+          dashes: true,              // Dashed line to show it's a prerequisite relationship
+          width: 2                   // Thicker line for visibility
+        });
       });
-    });
+    } else {
+      console.log(`No prerequisites found for ${course.name}`);
+    }
   };
 
+  // Process each course: load its module info and add to visualization
   for (const course of courses) {
+    // Attempt to load detailed module information for this course
     let success = await loadCourseModuleInfo(course);
     if (!success) {
       console.warn(`Failed to load module info for course: ${course.id}`);
-      continue;
+      continue; // Skip this course if module info can't be loaded
     }
+    
+    // Get the color for this course's modules
     var color = courseColors[courses.indexOf(course)];
+    
+    // Only process courses that have valid module and prerequisite data
     if (course.moduleInfo && course.moduleInfo.modules && course.moduleInfo.prerequisites) {
       processModules(course, nodes, edges, color);
     } else {
@@ -86,22 +127,32 @@ async function loadModules() {
     }
   }
 
+  // Create the network visualization
   var container = document.getElementById('mynetwork');
   var data = {
-    nodes: nodes,
-    edges: edges
+    nodes: nodes,  // All module nodes to display
+    edges: edges   // All connections between modules
   };
+  
+  // Configuration options for the network visualization
   var options = {
-    layout: { randomSeed: 2},
-    nodes: { font: { color: 'white' } },
-    physics: {stabilization: true}
+    layout: { randomSeed: 2},               // Consistent layout on each load
+    nodes: { font: { color: 'white' } },    // White text on colored nodes
+    physics: {stabilization: true}          // Enable physics for automatic layout
   };
+  
+  // Initialize the vis.js network visualization
   var network = new vis.Network(container, data, options);
+  
+  // Add double-click handler to open modules in new tabs
   network.on("doubleClick", function (params) {
     if (params['nodes'].length > 0) {
+      // Open the clicked module's URL in a new browser tab
       window.open(params['nodes'][0], '_blank');
     }
   });
 }
+
+// Start the module loading process when the script runs
 loadModules();
 </script>
