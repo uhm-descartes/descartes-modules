@@ -53,7 +53,32 @@ async function drawCourseCards() {
 
         // Process each row (name, url, fullname, desc)
         for (const course of courses) {            
+            console.log('Course data:', course); // Debug: see what data we have
             if (course.name && course.url) {
+                // Check for prerequisites for this specific course
+                let prereqs = '';
+                console.log('Prerequisites for', course.name, ':', course.prerequisites, typeof course.prerequisites); // Debug
+                if (course.prerequisites && Array.isArray(course.prerequisites) && course.prerequisites.length > 0) {
+                    // Filter out empty prerequisites and map them back to course names
+                    const validPrereqs = course.prerequisites
+                        .filter(p => p && p.trim() !== '')
+                        .map(prereqId => {
+                            // Find the course with this ID to get its name
+                            const prereqCourse = courses.find(c => c.id === prereqId);
+                            if (prereqCourse) {
+                                return prereqCourse.name;
+                            } else {
+                                // If course not found, convert the ID back to a readable name
+                                // Convert "des-101" back to "DES 101"
+                                return prereqId.replace(/-/g, ' ').toUpperCase();
+                            }
+                        });
+                    if (validPrereqs.length > 0) {
+                        prereqs = `<p class="card-text"><strong>Prerequisites:</strong> ${validPrereqs.join(', ')}</p>`;
+                        console.log('Adding prerequisites:', prereqs); // Debug
+                    }
+                }
+                
                 // Generate course card with flexible layout
                 cardsHTML += `
                     <div class="course-card">
@@ -63,6 +88,7 @@ async function drawCourseCards() {
                                     <h4 class="text-center mb-0">${course.name}</h4>
                                     <h3 class="text-center mt-2">${course.title}</h3>
                                     <p class="card-text">${course.description}</p>
+                                    ${prereqs}
                                 </a>
                             </div>
                         </div>
