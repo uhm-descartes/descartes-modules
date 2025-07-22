@@ -5,7 +5,7 @@
 name: "UHM DESCARTES Modules"
 baseurl: /descartes-modules
 safe: false
-morea_theme: spacelab
+morea_theme: cerulean-green
 timezone: Pacific/Honolulu
 morea_navbar_items:
 # - Prerequisites
