@@ -71,6 +71,14 @@ To make your suggestion, use the form below:
     }
   });
 
+  // Function to hide status and error messages after 10 seconds
+  function hideMessagesAfterDelay() {
+    setTimeout(() => {
+      statMsg.style.display = 'none';
+      errorMsg.style.display = 'none';
+    }, 10000); // 10 seconds
+  }
+
   form.addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -88,10 +96,12 @@ To make your suggestion, use the form below:
         console.log('Suggestion sent');
         statMsg.style.display = 'block';
         errorMsg.style.display = 'none';
-        grecaptcha.reset(); // Reset CAPTCHA after successful send
+        grecaptcha.reset();
+        hideMessagesAfterDelay(); // Hide success message after 10s
       }, function(error) {
         console.error('Failed to send', error);
         errorMsg.style.display = 'block';
+        hideMessagesAfterDelay(); // Hide error message after 10s
       });
   });
 
