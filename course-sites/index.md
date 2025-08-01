@@ -62,15 +62,14 @@ async function drawCourseCards() {
                     // Filter out empty prerequisites and map them back to course names
                     const validPrereqs = course.prerequisites
                         .filter(p => p && p.trim() !== '')
-                        .map(prereqId => {
+                        .map(prereq => {
+                            const prereqId = generateCourseId(prereq)
                             // Find the course with this ID to get its name
                             const prereqCourse = courses.find(c => c.id === prereqId);
                             if (prereqCourse) {
                                 return prereqCourse.name;
                             } else {
-                                // If course not found, convert the ID back to a readable name
-                                // Convert "des-101" back to "DES 101"
-                                return prereqId.replace(/-/g, ' ').toUpperCase();
+                                return prereq;
                             }
                         });
                     if (validPrereqs.length > 0) {

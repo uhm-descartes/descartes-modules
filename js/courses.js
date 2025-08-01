@@ -5,7 +5,7 @@
  */
 function generateCourseId(name) {
     // Generate a unique ID for the course based on its name
-    return name.toLowerCase().replace(/\s+/g, '-');
+    return name.toLowerCase().replace(/\s+/g, '');
 }
 /**
  * Generate a title for a course based on its name and full name.
@@ -153,7 +153,7 @@ async function loadCoursesCSV(csvPath) {
             url: url.trim(),
             title: title.trim(),
             description: description.trim(),
-            prerequisites: prerequisites.trim().split(';').map(p => generateCourseId(p)), // Split by semicolon and trim each prerequisite
+            prerequisites: prerequisites.trim().split(';'), // Split by semicolon and trim each prerequisite
             repo: repo.trim(),
             moduleInfoUrl: url.trim() + '/module-info.js',
             moduleInfo: null // Initialize moduleInfo as null

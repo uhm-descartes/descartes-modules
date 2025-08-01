@@ -43,6 +43,7 @@ async function loadCourses() {
   var processCourse = function(course, nodes, edges, color) {
     if (existing.has(course.id)) return; // skip duplicate
     existing.add(course.id);
+    console.log('Processing course:', course.name);
     nodes.push({
       id: course.url,
       label: generateCourseTitle(course),
@@ -50,17 +51,24 @@ async function loadCourses() {
       shape: 'box',
       title: course.description
     });
-    if (course.prerequisites && course.prerequisites.length > 0) {
-      course.prerequisites.forEach(function (prerequisite) {
-        edges.push({
-          from: course.id,
-          to: generateCourseId(prerequisite),
-          arrows: 'to',
-          color: { color: '#' + color }
-        });
-      });
+    if (course.prerequisites && Array.isArray(course.prerequisites) && course.prerequisites.length > 0) {
+      // Filter out empty prerequisites and map them back to course names
+      var edgeList = course.prerequisites
+          .filter(p => p && p.trim() !== '')
+          .map(prereq => {
+              console.log('Processing prerequisite:', prereq);
+              const prereqId = generateCourseId(prereq)
+              const prereqUrl = courses.find(c => c.id == prereqId)?.url;
+              return {
+                from: course.url,
+                to: prereqUrl,
+                arrows: 'from',
+                color: { color: '#' + color }
+              };
+          });
+      }
+      edges.push(...edgeList);
     }
-  }
 
   // Now, for each course, get the global variable and process it
   for (const course of courses) {
