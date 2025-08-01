@@ -63,9 +63,13 @@ async function loadModules() {
       }
     }
     _.each(course.moduleInfo.prerequisites, function (prereq) {
+      console.log('Processing prerequisite:', prereq);
+      if (!prereq.prerequisiteUrl.toLowerCase().startsWith('http')) return; // skip self-references
+      const moduleUrl = generateModuleUrl(course.url, prereq.moduleUrl);
+      var prereqUrl = prereq.prerequisiteUrl;
       edges.push({
-        from: prereq.moduleUrl,
-        to: prereq.prerequisiteUrl,
+        from: moduleUrl,
+        to: prereqUrl,
         arrows: 'from',
         color: '#' + color
       });
