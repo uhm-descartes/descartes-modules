@@ -807,6 +807,9 @@ module Morea
           end
         end
       end
+      if (url == "" && page_id.downcase.start_with?("http"))
+        url = page_id
+      end
       if (url == "")
         Morea.log.error "Error: Could not find page or url corresponding to #{page_id}".red
         site.config['morea_fatal_errors'] = true
