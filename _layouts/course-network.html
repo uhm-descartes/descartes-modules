@@ -45,11 +45,12 @@ async function loadCourses() {
     existing.add(course.id);
     console.log('Processing course:', course.name);
     nodes.push({
-      id: course.url,
+      id: course.id,
       label: generateCourseTitle(course),
       color: '#' + color,
       shape: 'box',
-      title: course.description
+      title: course.description,
+      url: course.url
     });
     if (course.prerequisites && Array.isArray(course.prerequisites) && course.prerequisites.length > 0) {
       // Filter out empty prerequisites and map them back to course names
@@ -58,10 +59,9 @@ async function loadCourses() {
           .map(prereq => {
               console.log('Processing prerequisite:', prereq);
               const prereqId = generateCourseId(prereq)
-              const prereqUrl = courses.find(c => c.id == prereqId)?.url;
               return {
-                from: course.url,
-                to: prereqUrl,
+                from: course.id,
+                to: prereqId,
                 arrows: 'from',
                 color: { color: '#' + color }
               };
@@ -89,9 +89,13 @@ async function loadCourses() {
   var network = new vis.Network(container, data, options);
   network.on("doubleClick", function (params) {
     if (params['nodes'].length > 0) {
-      console.log('Opening course:', params['nodes'][0]);
-      // Open the course URL in a new tab
-      window.open(params['nodes'][0], '_blank');
+      // Find the course with the clicked node ID
+      const clickedNodeId = params['nodes'][0];
+      const clickedCourse = courses.find(c => c.id === clickedNodeId);
+      if (clickedCourse) {
+        console.log('Opening course:', clickedCourse.url);
+        window.open(clickedCourse.url, '_blank');
+      }
     }
   });
 }
